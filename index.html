@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>數學冒險樂園｜翰林版四年級數學</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Noto+Sans+TC:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --pink:#FF7EB6; --pink-deep:#F45D9E; --pink-soft:#FFD6E8;
+  --lavender:#CDB4FF; --mint:#8BE9D0; --butter:#FFE66D;
+  --sky:#BDE8FF; --peach:#FFC9A3;
+  --bg:#FDEBF4; --panel:#FFF8FC; --ink:#7A4A63; --ink-strong:#B94B7E; --ink-soft:#B48CA5;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{
+  font-family:'Noto Sans TC',sans-serif;color:var(--ink);
+  background:linear-gradient(180deg,#FBD9EC 0%,#FDEBF4 30%,#FDF2F8 100%);
+  min-height:100vh;
+}
+.num{font-family:'Baloo 2','Noto Sans TC',sans-serif}
+button{font-family:inherit;cursor:pointer}
+button:focus-visible{outline:3px solid var(--lavender);outline-offset:2px}
+
+/* ══ 版面骨架 ══ */
+.app{max-width:1080px;margin:0 auto;padding:14px;display:grid;grid-template-columns:96px 1fr;gap:14px}
+@media(max-width:820px){.app{grid-template-columns:1fr}}
+
+/* ══ 頂欄 ══ */
+.topbar{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.logo{display:flex;align-items:center;gap:10px;background:#fff;border:2.5px solid var(--pink-soft);
+  border-radius:22px;padding:8px 16px;box-shadow:0 6px 14px rgba(244,93,158,.12)}
+.logo .book{font-size:1.8rem}
+.logo .t1{font-size:.7rem;font-weight:700;color:var(--pink-deep);letter-spacing:.15em}
+.logo .t2{font-size:1.05rem;font-weight:900;color:var(--ink-strong)}
+.logo .t3{font-size:.62rem;font-weight:700;color:var(--ink-soft);letter-spacing:.1em}
+.profile{display:flex;align-items:center;gap:10px;background:#fff;border:2.5px solid var(--pink-soft);
+  border-radius:999px;padding:6px 16px 6px 8px;box-shadow:0 6px 14px rgba(244,93,158,.12)}
+.avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(160deg,#FFE1EF,#F3E4FF);
+  display:grid;place-items:center;font-size:1.3rem;border:2px solid #FFC7DE}
+.profile .name{font-size:.9rem;font-weight:900;color:var(--ink-strong)}
+.profile .lv{font-size:.68rem;font-weight:700;color:var(--ink-soft)}
+
+/* ══ 側邊欄 ══ */
+.side{background:var(--panel);border:2.5px solid var(--pink-soft);border-radius:28px;
+  padding:14px 8px;display:flex;flex-direction:column;gap:4px;align-self:start;
+  box-shadow:0 8px 20px rgba(244,93,158,.1);position:sticky;top:14px}
+.side button{display:flex;flex-direction:column;align-items:center;gap:4px;width:100%;
+  background:transparent;border:2px solid transparent;border-radius:18px;padding:10px 4px;
+  font-size:.72rem;font-weight:800;color:var(--ink);transition:background .12s,transform .12s}
+.side button .ico{font-size:1.35rem}
+.side button:hover{background:#FFE9F3;transform:translateY(-2px)}
+.side button.on{background:#fff;border-color:#FFB7D6;color:var(--pink-deep);
+  box-shadow:0 4px 10px rgba(244,93,158,.18)}
+@media(max-width:820px){.side{display:none}}
+
+/* ══ 主內容 ══ */
+main{display:flex;flex-direction:column;gap:16px;min-width:0}
+
+/* ── 英雄區 ── */
+.hero{position:relative;border-radius:32px;overflow:hidden;border:3px solid #FFC7DE;
+  background:linear-gradient(180deg,#FBD3EA 0%,#F6E3FA 34%,#D9F4E4 72%,#C4EED6 100%);
+  padding:26px 20px 0;text-align:center;box-shadow:0 12px 28px rgba(244,93,158,.16)}
+.hero .pill{display:inline-block;background:#fff;border:2px solid #FFB7D6;border-radius:999px;
+  padding:4px 18px;font-size:.85rem;font-weight:900;color:var(--pink-deep);letter-spacing:.15em}
+.hero h1{margin-top:10px;font-size:clamp(2rem,6vw,3.1rem);font-weight:900;letter-spacing:.1em;
+  color:#C15A93;text-shadow:0 3px 0 #fff,0 6px 14px rgba(193,90,147,.25)}
+.hero h1 .c1{color:#F45D9E}.hero h1 .c2{color:#A47CFF}.hero h1 .c3{color:#F4A24B}.hero h1 .c4{color:#4BC49A}
+.ribbon{display:inline-block;margin-top:10px;background:linear-gradient(120deg,#FF9DC7,#F45D9E);
+  color:#fff;font-size:.9rem;font-weight:900;letter-spacing:.25em;text-indent:.25em;
+  padding:8px 26px;border-radius:14px;box-shadow:0 5px 0 #E0498B;
+  clip-path:polygon(3% 0,97% 0,100% 50%,97% 100%,3% 100%,0 50%)}
+.scene{position:relative;height:230px;margin-top:6px}
+.scene .rainbow{position:absolute;left:4%;top:-6px;font-size:3rem;opacity:.9}
+.scene .balloon{position:absolute;right:7%;top:-2px;font-size:2.2rem;animation:floaty 7s ease-in-out infinite}
+.scene .castle{position:absolute;right:3%;bottom:8px;font-size:4.2rem;filter:hue-rotate(40deg) saturate(.8)}
+.scene .house1{position:absolute;left:5%;bottom:14px;font-size:2.4rem}
+.scene .flower{position:absolute;bottom:6px;font-size:1.5rem}
+.scene .bubble{position:absolute;left:6%;top:44px;background:#fff;border:2px solid #FFC7DE;
+  border-radius:20px;padding:10px 14px;font-size:.82rem;font-weight:900;color:var(--ink-strong);line-height:1.5;
+  box-shadow:0 6px 12px rgba(244,93,158,.15)}
+.scene .bubble::after{content:"";position:absolute;right:-10px;top:50%;border:8px solid transparent;
+  border-left-color:#fff}
+.mascot{position:absolute;left:50%;transform:translateX(-50%);bottom:-4px;width:210px}
+.mascot-img{width:240px;border-radius:26px;border:4px solid #fff;box-shadow:0 10px 22px rgba(193,90,147,.3)}
+.bunny{position:absolute;left:calc(50% + 96px);bottom:2px;width:86px}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@media(prefers-reduced-motion:reduce){.scene .balloon{animation:none}}
+
+/* ── 統計列 ── */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;background:var(--panel);
+  border:2.5px solid var(--pink-soft);border-radius:26px;padding:14px;
+  box-shadow:0 8px 20px rgba(244,93,158,.1)}
+@media(max-width:640px){.stats{grid-template-columns:repeat(2,1fr)}}
+.stat{border-radius:20px;padding:12px 14px;display:flex;gap:10px;align-items:center}
+.stat:nth-child(1){background:#FFF3E6}.stat:nth-child(2){background:#F3EAFF}
+.stat:nth-child(3){background:#FFEDEA}.stat:nth-child(4){background:#FFF8DC}
+.stat .ico{font-size:1.9rem}
+.stat .lab{font-size:.72rem;font-weight:800;color:var(--ink-soft)}
+.stat .val{font-size:1.35rem;font-weight:800;color:var(--ink-strong);line-height:1.1}
+.stat .val small{font-size:.75rem;font-weight:900;color:var(--ink)}
+.bar{height:9px;border-radius:99px;background:#EBDCF5;margin-top:5px;overflow:hidden;min-width:80px}
+.bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#CDB4FF,#A47CFF)}
+
+/* ── 單元區 ── */
+.units-panel{background:var(--panel);border:2.5px solid var(--pink-soft);border-radius:28px;
+  padding:20px 16px 22px;box-shadow:0 8px 20px rgba(244,93,158,.1)}
+.units-title{text-align:center;font-size:1.25rem;font-weight:900;color:var(--ink-strong);letter-spacing:.1em;margin-bottom:16px}
+.units{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+@media(max-width:900px){.units{grid-template-columns:repeat(2,1fr)}}
+.unit{position:relative;border-radius:22px;padding:14px 12px 12px;text-align:center;border:2.5px solid;
+  background:#fff;transition:transform .14s,box-shadow .14s;display:flex;flex-direction:column;gap:8px}
+.unit:hover{transform:translateY(-4px);box-shadow:0 12px 22px rgba(122,74,99,.15)}
+.unit .no{position:absolute;top:-12px;left:-8px;width:30px;height:30px;border-radius:50%;
+  display:grid;place-items:center;color:#fff;font-weight:800;font-size:.9rem;box-shadow:0 3px 8px rgba(0,0,0,.15)}
+.unit .fav-star{position:absolute;top:-12px;right:-8px;background:#fff;border:2px solid #E0CFFF;
+  border-radius:50%;width:28px;height:28px;display:grid;place-items:center;font-size:.9rem;
+  box-shadow:0 3px 8px rgba(164,124,255,.25);cursor:pointer;filter:grayscale(1) opacity(.5);z-index:2}
+.unit .fav-star.on{filter:none;background:#F3EAFF}
+.unit .name{font-size:.98rem;font-weight:900}
+.unit .pic{height:64px;display:grid;place-items:center;font-weight:800}
+.unit .meta{display:flex;align-items:center;gap:8px}
+.unit .meta .num{font-size:.72rem;color:var(--ink-soft);font-weight:700}
+.unit .meta .star{margin-left:auto;font-size:1.05rem;filter:grayscale(1) opacity(.45)}
+.ubar{flex:1;height:8px;border-radius:99px;background:#F0E4EC;overflow:hidden}
+.ubar i{display:block;height:100%;border-radius:99px}
+/* 每張卡的糖果色 */
+.u1{border-color:#FFC7DE;background:linear-gradient(180deg,#FFF,#FFF0F7)}.u1 .no{background:#FF7EB6}.u1 .name{color:#E0498B}.u1 .ubar i{background:#FF7EB6}
+.u2{border-color:#E0CFFF;background:linear-gradient(180deg,#FFF,#F6F0FF)}.u2 .no{background:#A47CFF}.u2 .name{color:#8A5CF0}.u2 .ubar i{background:#A47CFF}
+.u3{border-color:#BFE4FF;background:linear-gradient(180deg,#FFF,#EFF8FF)}.u3 .no{background:#54AEE8}.u3 .name{color:#2F8FD4}.u3 .ubar i{background:#54AEE8}
+.u4{border-color:#C4EDD2;background:linear-gradient(180deg,#FFF,#F0FBF3)}.u4 .no{background:#57C785}.u4 .name{color:#2FA362}.u4 .ubar i{background:#57C785}
+.u5{border-color:#FFE1AD;background:linear-gradient(180deg,#FFF,#FFF8EA)}.u5 .no{background:#F4A24B}.u5 .name{color:#E0862B}.u5 .ubar i{background:#F4A24B}
+.u6{border-color:#FFC9C9;background:linear-gradient(180deg,#FFF,#FFF1F1)}.u6 .no{background:#F87171}.u6 .name{color:#E14F4F}.u6 .ubar i{background:#F87171}
+.u7{border-color:#E0CFFF;background:linear-gradient(180deg,#FFF,#F6F0FF)}.u7 .no{background:#B387F5}.u7 .name{color:#8A5CF0}.u7 .ubar i{background:#B387F5}
+.u8{border-color:#BFE4FF;background:linear-gradient(180deg,#FFF,#EFF8FF)}.u8 .no{background:#5BC0DE}.u8 .name{color:#2E9FC2}.u8 .ubar i{background:#5BC0DE}
+.u9{border-color:#FFC7DE;background:linear-gradient(180deg,#FFF,#FFF0F7)}.u9 .no{background:#FF7EB6}.u9 .name{color:#E0498B}.u9 .ubar i{background:#FF7EB6}
+.u10{border-color:#C4EDD2;background:linear-gradient(180deg,#FFF,#F0FBF3)}.u10 .no{background:#57C785}.u10 .name{color:#2FA362}.u10 .ubar i{background:#57C785}
+/* 卡片小插圖 */
+.blocks{display:grid;grid-template-columns:repeat(3,20px);gap:3px}
+.blocks b{width:20px;height:20px;border-radius:5px;display:grid;place-items:center;font-size:.5rem;color:#fff}
+.eq{font-family:'Baloo 2',sans-serif;font-size:1.5rem;font-weight:800;letter-spacing:.05em}
+.ops{display:flex;gap:5px}
+.ops b{width:26px;height:26px;border-radius:8px;color:#fff;display:grid;place-items:center;font-size:1rem}
+.pie{width:52px;height:52px;border-radius:50%;
+  background:conic-gradient(#FF9DC7 0 25%,#FFE66D 25% 50%,#8BE9D0 50% 75%,#9FD6FF 75% 100%);
+  border:3px solid #fff;box-shadow:0 0 0 2px #E0CFFF}
+.frac{font-family:'Baloo 2',sans-serif;font-size:1rem;font-weight:800;color:#8A5CF0;display:inline-flex;flex-direction:column;line-height:1.05;vertical-align:middle;margin-left:8px}
+.frac span:first-child{border-bottom:2px solid #8A5CF0;padding:0 5px}
+.emoji-pic{font-size:2.6rem}
+.see-all{display:block;margin:18px auto 0;background:#fff;border:2.5px solid #FFB7D6;border-radius:999px;
+  padding:9px 26px;font-size:.9rem;font-weight:900;color:var(--pink-deep);
+  box-shadow:0 4px 0 #FFD6E8;transition:transform .12s}
+.see-all:active{transform:translateY(3px);box-shadow:none}
+
+/* ── 底部糖果按鈕列 ── */
+.candy-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+@media(max-width:640px){.candy-row{grid-template-columns:repeat(2,1fr)}.candy-row .c5{grid-column:1/-1}}
+.candy{border-radius:22px;border:3px solid;padding:14px 8px;display:flex;flex-direction:column;
+  align-items:center;gap:8px;font-weight:900;font-size:.95rem;background:#fff;
+  box-shadow:0 6px 0 rgba(0,0,0,.06);transition:transform .12s,box-shadow .12s}
+.candy:active{transform:translateY(4px);box-shadow:0 2px 0 rgba(0,0,0,.06)}
+.candy .ico{width:46px;height:46px;border-radius:16px;display:grid;place-items:center;font-size:1.5rem}
+.c1{border-color:#FFB7D6;color:#E0498B}.c1 .ico{background:#FFE3F0}
+.c2{border-color:#E0CFFF;color:#8A5CF0}.c2 .ico{background:#F3EAFF}
+.c3{border-color:#BFE4FF;color:#2F8FD4}.c3 .ico{background:#E8F5FF}
+.c4{border-color:#C4EDD2;color:#2FA362}.c4 .ico{background:#EAFBF0}
+.c5{border-color:#FFE1AD;color:#E0862B}.c5 .ico{background:#FFF4DE}
+
+footer{text-align:center;font-size:.85rem;font-weight:800;color:var(--ink-strong);
+  background:#fff;border:2.5px dashed #FFB7D6;border-radius:999px;padding:10px 16px;margin-bottom:6px}
+
+/* 角落小熊 */
+.bear{position:fixed;left:10px;bottom:8px;font-size:3.4rem;z-index:0;opacity:.95;pointer-events:none}
+@media(max-width:1150px){.bear{display:none}}
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- 頂欄 -->
+  <div class="topbar">
+    <div class="logo">
+      <span class="book">📕</span>
+      <div>
+        <div class="t1">翰林版</div>
+        <div class="t2">四年級數學</div>
+        <div class="t3 num">MATH ADVENTURE</div>
+      </div>
+    </div>
+    <div class="profile">
+      <div class="avatar">👧</div>
+      <div>
+        <div class="name">佳洵</div>
+        <div class="lv">Lv.<span class="num" id="lv">3</span> 學習小達人</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 側邊欄 -->
+  <nav class="side" aria-label="主選單">
+    <button class="on"><span class="ico">🏠</span>首頁</button>
+    <button onclick="location.href='map.html'"><span class="ico">🗺️</span>學習地圖</button>
+    <button onclick="location.href='practice.html'"><span class="ico">📝</span>課程練習</button>
+    <button onclick="location.href='mistakes.html'"><span class="ico">📘</span>錯題本</button>
+    <button onclick="location.href='favorites.html'"><span class="ico">⭐</span>我的收藏</button>
+    <button onclick="location.href='history.html'"><span class="ico">📊</span>學習紀錄</button>
+    <button onclick="location.href='checkin.html'"><span class="ico">📅</span>每日簽到</button>
+    <button onclick="location.href='settings.html'"><span class="ico">⚙️</span>設定</button>
+  </nav>
+
+  <main>
+
+    <!-- 英雄區 -->
+    <section class="hero">
+      <span class="pill">一起進入 💗</span>
+      <h1><span class="c1">數學</span><span class="c2">冒險</span><span class="c3">樂</span><span class="c4">園</span></h1>
+      <div class="ribbon">開心學數學 ・ 天天大進步！</div>
+
+      <div class="scene" aria-hidden="true">
+        <span class="rainbow">🌈</span>
+        <span class="balloon">🎈</span>
+        <span class="castle">🏰</span>
+        <span class="house1">🏡</span>
+        <span class="flower" style="left:14%">🌸</span>
+        <span class="flower" style="left:24%">🌼</span>
+        <span class="flower" style="right:20%">🌷</span>
+        <div class="bubble">今天也要<br>加油學習哦！💗</div>
+
+        <!-- 吉祥物圖片插槽：把擷取的角色圖存成 mascot.png 放在同資料夾，會自動取代下方 SVG -->
+        <img class="mascot mascot-img" src="mascot.png" alt="佳洵的學習小夥伴" style="display:none"
+             onload="this.style.display='block';document.getElementById('svgMascot').style.display='none';document.getElementById('svgBunny').style.display='none';">
+
+        <!-- 自繪 SVG 小女孩吉祥物（找不到 mascot.png 時的預設） -->
+        <svg class="mascot" id="svgMascot" viewBox="0 0 220 190">
+          <!-- 頭髮後層 -->
+          <path d="M40 95 Q28 150 45 178 Q60 165 58 130 Z" fill="#7B4A2E"/>
+          <path d="M180 95 Q192 150 175 178 Q160 165 162 130 Z" fill="#7B4A2E"/>
+          <!-- 臉 -->
+          <circle cx="110" cy="92" r="55" fill="#FFE8D6"/>
+          <!-- 瀏海 -->
+          <path d="M55 88 Q52 34 110 32 Q168 34 165 88 Q150 62 128 66 Q118 48 104 62 Q80 54 70 78 Q62 80 55 88 Z" fill="#8B5A38"/>
+          <!-- 蝴蝶結髮箍 -->
+          <path d="M96 34 Q110 26 124 34 L118 46 Q110 40 102 46 Z" fill="#FF9DC7"/>
+          <circle cx="110" cy="38" r="6" fill="#F45D9E"/>
+          <path d="M84 30 Q68 22 60 36 Q74 44 88 40 Z" fill="#FF9DC7"/>
+          <path d="M136 30 Q152 22 160 36 Q146 44 132 40 Z" fill="#FF9DC7"/>
+          <!-- 星星髮飾 -->
+          <text x="146" y="78" font-size="14">⭐</text>
+          <!-- 眼睛：一眼眨眼 -->
+          <circle cx="90" cy="98" r="8.5" fill="#4A2C1A"/>
+          <circle cx="93" cy="95" r="3" fill="#fff"/>
+          <path d="M122 96 Q131 104 140 96" stroke="#4A2C1A" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <!-- 腮紅 -->
+          <ellipse cx="78" cy="114" rx="9" ry="5" fill="#FFB7C9" opacity=".8"/>
+          <ellipse cx="142" cy="114" rx="9" ry="5" fill="#FFB7C9" opacity=".8"/>
+          <!-- 嘴巴 -->
+          <path d="M100 120 Q110 132 122 120 Q118 136 108 135 Q101 133 100 120 Z" fill="#E0498B"/>
+          <!-- 身體 -->
+          <path d="M76 148 Q110 138 144 148 L150 190 L70 190 Z" fill="#FF9DC7"/>
+          <path d="M92 150 Q110 144 128 150 L128 190 L92 190 Z" fill="#FFE3F0"/>
+          <circle cx="110" cy="160" r="4" fill="#F45D9E"/>
+          <circle cx="110" cy="174" r="4" fill="#F45D9E"/>
+          <!-- 舉起加油的手 -->
+          <path d="M144 150 Q170 130 172 106" stroke="#FFE8D6" stroke-width="13" fill="none" stroke-linecap="round"/>
+          <circle cx="173" cy="102" r="10" fill="#FFE8D6"/>
+        </svg>
+
+        <!-- 自繪 SVG 小兔兔 -->
+        <svg class="bunny" id="svgBunny" viewBox="0 0 90 92">
+          <ellipse cx="30" cy="20" rx="9" ry="20" fill="#fff"/>
+          <ellipse cx="30" cy="22" rx="4.5" ry="13" fill="#FFD6E3"/>
+          <ellipse cx="58" cy="20" rx="9" ry="20" fill="#fff"/>
+          <ellipse cx="58" cy="22" rx="4.5" ry="13" fill="#FFD6E3"/>
+          <circle cx="44" cy="56" r="32" fill="#fff"/>
+          <circle cx="33" cy="52" r="4" fill="#4A2C1A"/>
+          <circle cx="55" cy="52" r="4" fill="#4A2C1A"/>
+          <ellipse cx="25" cy="62" rx="6" ry="3.5" fill="#FFB7C9"/>
+          <ellipse cx="63" cy="62" rx="6" ry="3.5" fill="#FFB7C9"/>
+          <path d="M40 62 Q44 66 48 62" stroke="#E0498B" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <path d="M44 60 L44 64" stroke="#E0498B" stroke-width="3" stroke-linecap="round"/>
+          <path d="M38 84 Q30 92 24 86 Q28 78 38 80 Z" fill="#FF9DC7"/>
+          <path d="M50 84 Q58 92 64 86 Q60 78 50 80 Z" fill="#FF9DC7"/>
+          <circle cx="44" cy="84" r="5" fill="#F45D9E"/>
+        </svg>
+      </div>
+    </section>
+
+    <!-- 統計列 -->
+    <section class="stats">
+      <div class="stat">
+        <span class="ico">⭐</span>
+        <div style="flex:1">
+          <div class="lab">我的等級</div>
+          <div class="val num">Lv.<span id="statLv">3</span></div>
+          <div class="bar"><i id="lvBar" style="width:65%"></i></div>
+          <div class="lab num" style="text-align:right" id="lvText">65 / 100</div>
+        </div>
+      </div>
+      <div class="stat">
+        <span class="ico">💎</span>
+        <div><div class="lab">我的星星</div><div class="val num"><span id="statStars">145</span> <small>顆</small></div></div>
+      </div>
+      <div class="stat">
+        <span class="ico">🔥</span>
+        <div><div class="lab">連續學習</div><div class="val num"><span id="statStreak">5</span> <small>天</small></div></div>
+      </div>
+      <div class="stat">
+        <span class="ico">🏆</span>
+        <div><div class="lab">總成就</div><div class="val num"><span id="statAch">12</span> <small>個</small></div></div>
+      </div>
+    </section>
+
+    <!-- 單元學習 -->
+    <section class="units-panel">
+      <h2 class="units-title">🌸 翰林版 四上單元學習 🌸</h2>
+      <div class="units">
+
+        <button class="unit u1" onclick="location.href='unit1.html'">
+          <span class="no">1</span>
+          <span class="name">一億以內的數</span>
+          <span class="pic"><span class="blocks">
+            <b style="background:#8BE9D0">1000</b><b style="background:#FF9DC7">萬</b><b style="background:#FFD46D">億</b>
+            <b style="background:#9FD6FF">10</b><b style="background:#CDB4FF">百</b><b style="background:#FFA98A">千</b>
+          </span></span>
+          <span class="meta"><span class="ubar"><i id="u1bar" style="width:0%"></i></span><span class="num" id="u1num">0/10</span><span class="star" id="u1star">⭐</span></span>
+        </button>
+
+        <button class="unit u2" onclick="location.href='unit2.html'">
+          <span class="no">2</span>
+          <span class="name">乘法</span>
+          <span class="pic eq"><span style="color:#8A5CF0">3</span> × <span style="color:#F4A24B">7</span> = <span style="color:#F45D9E">21</span></span>
+          <span class="meta"><span class="ubar"><i id="u2bar" style="width:0%"></i></span><span class="num" id="u2num">0/10</span><span class="star" id="u2star">⭐</span></span>
+        </button>
+
+        <button class="unit u3" onclick="location.href='unit3.html'">
+          <span class="no">3</span>
+          <span class="name">角度</span>
+          <span class="pic emoji-pic">📐</span>
+          <span class="meta"><span class="ubar"><i id="u3bar" style="width:0%"></i></span><span class="num" id="u3num">0/10</span><span class="star" id="u3star">⭐</span></span>
+        </button>
+
+        <button class="unit u4" onclick="location.href='unit4.html'">
+          <span class="no">4</span>
+          <span class="name">假分數與帶分數</span>
+          <span class="pic"><span class="pie"></span><span class="frac"><span>5</span><span>4</span></span></span>
+          <span class="meta"><span class="ubar"><i id="u4bar" style="width:0%"></i></span><span class="num" id="u4num">0/10</span><span class="star" id="u4star">⭐</span></span>
+        </button>
+
+        <button class="unit u5" onclick="location.href='unit5.html'">
+          <span class="no">5</span>
+          <span class="name">公里</span>
+          <span class="pic emoji-pic">🚗<span style="font-size:.85rem;color:#E0862B" class="num"> ─ 10km</span></span>
+          <span class="meta"><span class="ubar"><i id="u5bar" style="width:0%"></i></span><span class="num" id="u5num">0/10</span><span class="star" id="u5star">⭐</span></span>
+        </button>
+
+        <button class="unit u6" onclick="location.href='unit6.html'">
+          <span class="no">6</span>
+          <span class="name">除法</span>
+          <span class="pic eq"><span style="color:#E14F4F">24</span> ÷ <span style="color:#A47CFF">6</span> = <span style="color:#54AEE8">4</span></span>
+          <span class="meta"><span class="ubar"><i id="u6bar" style="width:0%"></i></span><span class="num" id="u6num">0/10</span><span class="star" id="u6star">⭐</span></span>
+        </button>
+
+        <button class="unit u7" onclick="location.href='unit7.html'">
+          <span class="no">7</span>
+          <span class="name">三角形與全等</span>
+          <span class="pic emoji-pic">🔺<span style="font-size:1.6rem;opacity:.6">🔺</span></span>
+          <span class="meta"><span class="ubar"><i id="u7bar" style="width:0%"></i></span><span class="num" id="u7num">0/10</span><span class="star" id="u7star">⭐</span></span>
+        </button>
+
+        <button class="unit u8" onclick="location.href='unit8.html'">
+          <span class="no">8</span>
+          <span class="name">兩步驟與併式</span>
+          <span class="pic eq" style="font-size:1.15rem"><span style="color:#2E9FC2">(3＋2)</span> × <span style="color:#F45D9E">4</span></span>
+          <span class="meta"><span class="ubar"><i id="u8bar" style="width:0%"></i></span><span class="num" id="u8num">0/10</span><span class="star" id="u8star">⭐</span></span>
+        </button>
+
+        <button class="unit u9" onclick="location.href='unit9.html'">
+          <span class="no">9</span>
+          <span class="name">二位小數</span>
+          <span class="pic eq"><span style="color:#E0498B">0.25</span></span>
+          <span class="meta"><span class="ubar"><i id="u9bar" style="width:0%"></i></span><span class="num" id="u9num">0/10</span><span class="star" id="u9star">⭐</span></span>
+        </button>
+
+        <button class="unit u10" onclick="location.href='unit10.html'">
+          <span class="no">10</span>
+          <span class="name">統計圖表</span>
+          <span class="pic emoji-pic">📊</span>
+          <span class="meta"><span class="ubar"><i id="u10bar" style="width:0%"></i></span><span class="num" id="u10num">0/10</span><span class="star" id="u10star">⭐</span></span>
+        </button>
+
+      </div>
+      <button class="see-all">查看全部單元 ▾</button>
+    </section>
+
+    <!-- 底部糖果按鈕列 -->
+    <section class="candy-row">
+      <button class="candy c1" onclick="goToNextUnit()"><span class="ico">💗</span>開始學習</button>
+      <button class="candy c2" onclick="location.href='favorites.html'"><span class="ico">⭐</span>我的收藏</button>
+      <button class="candy c3" onclick="location.href='mistakes.html'"><span class="ico">📘</span>錯題本</button>
+      <button class="candy c4" onclick="location.href='checkin.html'"><span class="ico">✅</span>每日簽到</button>
+      <button class="candy c5" onclick="location.href='map.html'"><span class="ico">🗺️</span>學習地圖</button>
+    </section>
+
+    <footer>學習小提醒：每天學一點，進步多一點！💗</footer>
+  </main>
+</div>
+
+<span class="bear" aria-hidden="true">🧸</span>
+
+<script>
+try{
+  const g=(k,d)=>localStorage.getItem(k)??d;
+
+  // 名字（設定頁可改）
+  const nm = g('sm_name', null);
+  if(nm){ document.querySelectorAll('.profile .name').forEach(el=>el.textContent=nm); }
+
+  document.getElementById('statStars').textContent = g('sm_stars', 0);
+
+  // 連續學習天數（讀真實簽到紀錄）
+  let checkins = [];
+  try{ checkins = JSON.parse(g('sm_checkin','[]')); }catch(e){}
+  function calcStreak(list){
+    const set = new Set(list);
+    let streak = 0, d = new Date();
+    const todayStr = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    if(!set.has(todayStr)) d.setDate(d.getDate()-1);
+    while(true){
+      const s = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+      if(set.has(s)){ streak++; d.setDate(d.getDate()-1); } else break;
+    }
+    return streak;
+  }
+  document.getElementById('statStreak').textContent = calcStreak(checkins);
+
+  // 各單元真實進度（做完測驗會自動更新）
+  const prog=JSON.parse(g('sm_progress','{}'));
+  let perfectCount = 0;
+  for(const uid of ['u1','u2','u3','u4','u5','u6','u7','u8','u9','u10']){
+    if(!prog[uid])continue;
+    const d=prog[uid].done,
+          n=document.getElementById(uid+'num'),
+          b=document.getElementById(uid+'bar'),
+          s=document.getElementById(uid+'star');
+    if(n){n.textContent=d+'/10';b.style.width=(d*10)+'%';if(d>=8)s.style.filter='none';}
+    if(d>=10) perfectCount++;
+  }
+  document.getElementById('statAch').textContent = perfectCount;
+}catch(e){}
+
+// 「開始學習」跳到目前未完成的單元
+function goToNextUnit(){
+  let prog = {};
+  try { prog = JSON.parse(localStorage.getItem('sm_progress') || '{}'); } catch(e){}
+  const ids = ['u1','u2','u3','u4','u5','u6','u7','u8','u9','u10'];
+  let target = ids.find(id => !(prog[id] && prog[id].done >= 10));
+  if(!target) target = 'u1';
+  location.href = 'unit' + target.slice(1) + '.html';
+}
+
+// 單元卡收藏星星（點星星收藏／取消，不會觸發卡片跳轉）
+try{
+  let favs = [];
+  try{ favs = JSON.parse(localStorage.getItem('sm_favorites')||'[]'); }catch(e){}
+  document.querySelectorAll('.unit').forEach(card=>{
+    const cls = [...card.classList].find(c=>/^u\d+$/.test(c));
+    if(!cls) return;
+    const star = document.createElement('span');
+    star.className = 'fav-star' + (favs.includes(cls)?' on':'');
+    star.textContent = '⭐';
+    star.setAttribute('aria-label','收藏此單元');
+    star.onclick = (e)=>{
+      e.stopPropagation(); e.preventDefault();
+      const i = favs.indexOf(cls);
+      if(i>-1){ favs.splice(i,1); star.classList.remove('on'); }
+      else { favs.push(cls); star.classList.add('on'); }
+      try{ localStorage.setItem('sm_favorites', JSON.stringify(favs)); }catch(e){}
+    };
+    card.appendChild(star);
+  });
+}catch(e){}
+</script>
+</body>
+</html>

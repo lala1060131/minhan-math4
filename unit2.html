@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>單元 2 乘法｜數學冒險樂園</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Noto+Sans+TC:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --pink:#FF7EB6; --pink-deep:#F45D9E; --pink-soft:#FFD6E8;
+  --lavender:#CDB4FF; --mint:#8BE9D0; --butter:#FFE66D;
+  --bg:#FDEBF4; --panel:#FFF8FC; --ink:#7A4A63; --ink-strong:#B94B7E; --ink-soft:#B48CA5;
+  --good:#57C785; --bad:#F87171;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Noto Sans TC',sans-serif;color:var(--ink);
+  background:linear-gradient(180deg,#FBD9EC 0%,#FDEBF4 40%,#FDF2F8 100%);min-height:100vh}
+.num{font-family:'Baloo 2','Noto Sans TC',sans-serif}
+button{font-family:inherit;cursor:pointer}
+button:focus-visible,a:focus-visible{outline:3px solid var(--lavender);outline-offset:2px}
+.wrap{max-width:720px;margin:0 auto;padding:14px 14px 60px}
+
+/* ── 頂欄 ── */
+.top{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.back{display:flex;align-items:center;gap:6px;background:#fff;border:2.5px solid var(--pink-soft);
+  border-radius:999px;padding:8px 16px;font-weight:900;font-size:.88rem;color:var(--pink-deep);
+  text-decoration:none;box-shadow:0 4px 10px rgba(244,93,158,.12)}
+.unit-tag{margin-left:auto;background:#FF7EB6;color:#fff;border-radius:999px;padding:8px 16px;
+  font-weight:900;font-size:.85rem;box-shadow:0 4px 0 #E0498B}
+
+/* ── 標題卡 ── */
+.hero{background:linear-gradient(160deg,#FFE3F1,#F3EAFF);border:3px solid #FFC7DE;border-radius:28px;
+  padding:20px 22px;text-align:center;box-shadow:0 10px 24px rgba(244,93,158,.15);margin-bottom:14px;position:relative}
+.hero h1{font-size:1.6rem;font-weight:900;color:var(--ink-strong);letter-spacing:.08em}
+.hero .sub{font-size:.82rem;font-weight:700;color:var(--ink-soft);margin-top:4px}
+.hero .deco{position:absolute;font-size:1.4rem;opacity:.7}
+
+/* ── 分頁列 ── */
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.tab{border:3px solid transparent;border-radius:20px;padding:12px 6px;background:#fff;
+  font-weight:900;font-size:.95rem;color:var(--ink-soft);box-shadow:0 5px 12px rgba(244,93,158,.1);
+  transition:transform .12s}
+.tab .ico{display:block;font-size:1.4rem;margin-bottom:3px}
+.tab.on{color:var(--pink-deep);border-color:#FFB7D6;background:linear-gradient(180deg,#FFF,#FFF0F7);
+  transform:translateY(-3px)}
+.panel{display:none}.panel.on{display:block;animation:pop .25s ease}
+@keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.panel.on{animation:none}}
+
+/* ── 卡片通用 ── */
+.card{background:var(--panel);border:2.5px solid var(--pink-soft);border-radius:24px;
+  padding:18px;box-shadow:0 8px 20px rgba(244,93,158,.1);margin-bottom:14px}
+.card h2{font-size:1.05rem;font-weight:900;color:var(--ink-strong);margin-bottom:10px;
+  display:flex;align-items:center;gap:8px}
+.card h2 .chip{font-size:.68rem;background:#F3EAFF;color:#8A5CF0;border-radius:999px;padding:3px 10px}
+
+/* ── 重點整理 ── */
+.rule{display:flex;gap:12px;align-items:flex-start;background:#fff;border:2px solid #FFE3F0;
+  border-radius:18px;padding:12px 14px;margin-bottom:10px;font-size:.95rem;line-height:1.7}
+.rule .n{flex:none;width:30px;height:30px;border-radius:50%;background:var(--pink);color:#fff;
+  display:grid;place-items:center;font-weight:800}
+.rule b{color:var(--pink-deep)}
+.place-table{width:100%;border-collapse:separate;border-spacing:3px;text-align:center;margin:8px 0 4px}
+.place-table th{background:#FFD6E8;color:#B94B7E;border-radius:10px;padding:7px 2px;font-size:.72rem}
+.place-table td{background:#fff;border:2px solid #F3EAFF;border-radius:10px;padding:8px 2px;
+  font-family:'Baloo 2',sans-serif;font-size:1.15rem;font-weight:800;color:#8A5CF0}
+.example{background:linear-gradient(160deg,#FFF8EA,#FFF3DB);border:2px dashed #F4C56D;
+  border-radius:18px;padding:14px;font-size:.95rem;line-height:1.9}
+.example .step{display:flex;gap:10px;margin-top:6px}
+.example .step .s{flex:none;background:#F4A24B;color:#fff;border-radius:999px;font-size:.72rem;
+  font-weight:900;padding:3px 10px;height:fit-content;margin-top:3px}
+
+/* ── 影片區（點縮圖開新視窗播放） ── */
+.vgroup{font-size:.85rem;font-weight:900;color:#8A5CF0;margin:14px 4px 8px}
+.vcard{display:flex;gap:12px;align-items:center;background:#fff;border:2.5px solid #E0CFFF;
+  border-radius:20px;padding:10px;margin-bottom:10px;text-decoration:none;color:var(--ink);
+  transition:transform .12s,box-shadow .12s}
+.vcard:hover{transform:translateY(-3px);box-shadow:0 10px 20px rgba(164,124,255,.2)}
+.vcard img{width:120px;border-radius:14px;border:2px solid #F3EAFF;flex:none}
+.vcard .t{font-weight:900;font-size:.92rem;line-height:1.5}
+.vcard .go{margin-left:auto;flex:none;background:#A47CFF;color:#fff;border-radius:999px;
+  padding:6px 12px;font-size:.75rem;font-weight:900;box-shadow:0 3px 0 #8A5CF0}
+.link-pill{display:inline-block;background:#fff;border:2px solid #C4EDD2;color:#2FA362;border-radius:999px;
+  padding:7px 14px;font-size:.8rem;font-weight:800;text-decoration:none;margin:0 6px 8px 0}
+.note{font-size:.78rem;color:var(--ink-soft);font-weight:700;margin-top:6px;line-height:1.6}
+
+/* ── 測驗區 ── */
+.start-box{text-align:center;padding:26px 10px}
+.start-box .mascot{font-size:3.6rem}
+.big-btn{display:inline-block;margin-top:14px;padding:16px 44px;font-size:1.2rem;font-weight:900;
+  letter-spacing:.2em;text-indent:.2em;color:#fff;border:none;border-radius:999px;
+  background:linear-gradient(135deg,#FF9DC7,var(--pink) 55%,var(--pink-deep));
+  box-shadow:0 8px 0 #E0498B,0 14px 26px rgba(255,126,182,.4);transition:transform .12s,box-shadow .12s}
+.big-btn:active{transform:translateY(5px);box-shadow:0 3px 0 #E0498B}
+.trail{display:flex;justify-content:space-between;align-items:center;margin:4px 2px 16px}
+.dot{width:20px;height:20px;border-radius:50%;background:#F0DDE8;display:grid;place-items:center;font-size:.7rem}
+.dot.now{background:var(--butter);box-shadow:0 0 0 4px #FFF3C2;font-size:.95rem}
+.dot.ok{background:var(--mint)}.dot.ng{background:#FFC9C9}
+.q-no{font-size:.8rem;font-weight:900;color:var(--ink-soft);margin-bottom:6px}
+.q-text{font-size:1.15rem;font-weight:900;color:var(--ink-strong);line-height:1.7;margin-bottom:14px}
+.opts{display:grid;gap:10px}
+.opt{text-align:left;background:#fff;border:2.5px solid #F0DDE8;border-radius:18px;padding:13px 16px;
+  font-size:1rem;font-weight:800;color:var(--ink);transition:transform .1s,border-color .1s}
+.opt:hover{border-color:#FFB7D6}
+.opt.ok{border-color:var(--good);background:#EAFBF0;color:#2FA362}
+.opt.ng{border-color:var(--bad);background:#FFF1F1;color:#E14F4F;animation:shake .3s}
+.opt:disabled{cursor:default}
+@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.feedback{margin-top:12px;font-weight:900;font-size:.95rem;min-height:1.6em}
+.feedback.good{color:var(--good)}.feedback.bad{color:var(--bad)}
+.next-btn{display:none;margin:14px auto 0;padding:11px 34px;font-size:1rem;font-weight:900;color:#fff;
+  border:none;border-radius:999px;background:#A47CFF;box-shadow:0 5px 0 #8A5CF0}
+.next-btn:active{transform:translateY(3px);box-shadow:0 2px 0 #8A5CF0}
+.result{text-align:center;padding:20px 8px}
+.result .face{font-size:3.6rem}
+.result .score{font-size:2.4rem;font-weight:800;color:var(--pink-deep)}
+.result .stars-line{font-size:1.6rem;letter-spacing:.1em;margin:8px 0}
+.result .msg{font-weight:900;color:var(--ink-strong);margin-bottom:14px}
+.ghost-btn{background:#fff;border:2.5px solid #FFB7D6;color:var(--pink-deep);border-radius:999px;
+  padding:10px 24px;font-weight:900;margin:0 5px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <a class="back" href="index.html">← 回首頁</a>
+    <span class="unit-tag">翰林四上 ・ 單元 2</span>
+  </div>
+
+  <div class="hero">
+    <span class="deco" style="top:10px;left:14px">🌸</span>
+    <span class="deco" style="top:12px;right:16px">⭐</span>
+    <h1>✖️ 乘法</h1>
+    <div class="sub">2-1 乘以一、二位數 ・ 2-2 乘以三位數 ・ 2-3 乘法算式的規律</div>
+  </div>
+
+  <div class="tabs" role="tablist">
+    <button class="tab on" data-p="p1"><span class="ico">📖</span>重點整理</button>
+    <button class="tab" data-p="p2"><span class="ico">🎬</span>教學影片</button>
+    <button class="tab" data-p="p3"><span class="ico">💗</span>開始挑戰</button>
+  </div>
+
+  <!-- ═══ 重點整理 ═══ -->
+  <section class="panel on" id="p1">
+    <div class="card">
+      <h2>🍭 三個必記重點</h2>
+      <div class="rule"><span class="n">1</span><div>
+        <b>直式乘法要對齊！</b>乘數是二位數時分兩層算：先用<b>個位</b>去乘，再用<b>十位</b>去乘。
+        用十位乘出來的答案，寫的時候要<b>往左移一格</b>（因為它代表「幾十」），最後兩層加起來。
+      </div></div>
+      <div class="rule"><span class="n">2</span><div>
+        <b>乘以三位數就是三層！</b>個位一層、十位一層（左移一格）、百位一層（左移兩格），
+        一層一層算完再全部加起來。層數變多不可怕，<b>每層都只是九九乘法＋進位</b>。
+      </div></div>
+      <div class="rule"><span class="n">3</span><div>
+        <b>末位是 0 的偷懶密技：</b>先把兩個數尾巴的 0 <b>遮起來</b>，剩下的數字相乘，
+        算完再把遮住的 0 <b>全部補回尾巴</b>。例如 300 × 40 → 3×4＝12，補回 3 個 0 → <b>12000</b>！
+      </div></div>
+    </div>
+
+    <div class="card">
+      <h2>🌟 範例：算算看 23 × 45</h2>
+      <div class="example">
+        <div class="step"><span class="s">第1步</span><div>先用個位的 5 乘：23 × 5 ＝ <b>115</b></div></div>
+        <div class="step"><span class="s">第2步</span><div>再用十位的 4 乘：23 × 40 ＝ <b>920</b>（記得左移一格！）</div></div>
+        <div class="step"><span class="s">第3步</span><div>兩層加起來：115 ＋ 920 ＝ <b>1035</b></div></div>
+        <div class="step"><span class="s">答案</span><div>23 × 45 ＝ <b>1035</b> 🎉</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ 教學影片 ═══ -->
+  <section class="panel" id="p2">
+    <div class="card">
+      <h2>🎬 均一素養動畫 <span class="chip">點縮圖開新視窗播放</span></h2>
+
+      <div class="vgroup">🩷 2-1 乘以一、二位數</div>
+      <a class="vcard" href="https://www.junyiacademy.org/course-compare/math-elem/math-4/h-m4a/h-m4a-c02/v/jydiWPCKDC4" target="_blank" rel="noopener">
+        <img src="https://img.youtube.com/vi/jydiWPCKDC4/mqdefault.jpg" alt="" loading="lazy">
+        <span class="t">【素養動畫】【解題】乘數是二位數的乘法</span><span class="go">▶ 播放</span>
+      </a>
+      <a class="vcard" href="https://www.junyiacademy.org/course-compare/math-elem/math-elem-legacy/h-m4a/h-m4ach2/v/nKNkiD85QX8" target="_blank" rel="noopener">
+        <img src="https://img.youtube.com/vi/nKNkiD85QX8/mqdefault.jpg" alt="" loading="lazy">
+        <span class="t">【例題】二位數乘以三位數：乘數位數有 0</span><span class="go">▶ 播放</span>
+      </a>
+
+      <div class="vgroup">💜 2-2 乘以三位數</div>
+      <a class="vcard" href="https://www.junyiacademy.org/course-compare/math-elem/math-4/n-m4a/n-m4b-c01/v/g8zOft0VFM4" target="_blank" rel="noopener">
+        <img src="https://img.youtube.com/vi/g8zOft0VFM4/mqdefault.jpg" alt="" loading="lazy">
+        <span class="t">【素養動畫】【解題】乘數是三位數的乘法</span><span class="go">▶ 播放</span>
+      </a>
+
+      <div class="vgroup">💙 2-3 乘法算式的規律</div>
+      <a class="vcard" href="https://www.junyiacademy.org/course-compare/math-elem/math-4/n-m4a/n-m4b-c01/v/xVzfTzc3Upg" target="_blank" rel="noopener">
+        <img src="https://img.youtube.com/vi/xVzfTzc3Upg/mqdefault.jpg" alt="" loading="lazy">
+        <span class="t">【素養動畫】【解題】末位是 0 的乘法</span><span class="go">▶ 播放</span>
+      </a>
+    </div>
+    <p class="note" style="margin:0 4px 10px">💡 部分影片收錄在均一「類南一版」路徑下，內容完全對應乘法主題，翰林版學生一樣適用。</p>
+
+    <div class="card">
+
+    <div class="card">
+      <h2>📝 均一延伸練習 <span class="chip">寫完挑戰想加練再來</span></h2>
+      <a class="link-pill" href="https://www.junyiacademy.org/exam/a1fd05414a35436fa6557d553fefc24f" target="_blank" rel="noopener">🎯 官方前測：翰林四上第二單元</a>
+      <a class="link-pill" href="https://www.junyiacademy.org/exercises/jnc-4-02-1-1a" target="_blank" rel="noopener">四位數×一位數 1</a>
+      <a class="link-pill" href="https://www.junyiacademy.org/exercises/menzs4bc" target="_blank" rel="noopener">四位數×一位數 2</a>
+      <a class="link-pill" href="https://www.junyiacademy.org/exercises/jnc-4-02-1-2a" target="_blank" rel="noopener">一、二位數×二位數 1</a>
+      <a class="link-pill" href="https://www.junyiacademy.org/exercises/menzs4bd" target="_blank" rel="noopener">一、二位數×二位數 2</a>
+      <a class="link-pill" href="https://www.junyiacademy.org/exercises/menzs4be" target="_blank" rel="noopener">三位數×二位數</a>
+      <a class="link-pill" href="https://www.junyiacademy.org/exercises/jnc-4-02-1-3a" target="_blank" rel="noopener">三、四位數×二位數</a>
+      <a class="link-pill" href="https://www.junyiacademy.org/exercises/jnc-4-02-1-4a" target="_blank" rel="noopener">一、二位數×三位數 1</a>
+      <a class="link-pill" href="https://www.junyiacademy.org/exercises/menzs4ba" target="_blank" rel="noopener">一、二位數×三位數 2</a>
+      <a class="link-pill" href="https://www.junyiacademy.org/exercises/jnc-4-02-1-5a" target="_blank" rel="noopener">三、四位數×三位數</a>
+      <a class="link-pill" href="https://www.junyiacademy.org/exercises/n-m5ach1-1a" target="_blank" rel="noopener">四位數×三位數</a>
+      <a class="link-pill" href="https://www.junyiacademy.org/exercises/n-m5ach1-1b" target="_blank" rel="noopener">有缺位的直式乘法</a>
+      <a class="link-pill" href="https://www.junyiacademy.org/exercises/jnc-4-02-1-6a" target="_blank" rel="noopener">末幾位為 0 的乘法（基礎）</a>
+      <a class="link-pill" href="https://www.junyiacademy.org/exercises/menzs5ab" target="_blank" rel="noopener">末幾位為 0 的乘法（一般）</a>
+      <p class="note">💡 影片和練習都會開「新視窗」到均一教育平台，看完關掉就回到這裡囉！</p>
+    </div>
+  </section>
+
+  <!-- ═══ 開始挑戰 ═══ -->
+  <section class="panel" id="p3">
+    <div class="card" id="quizCard">
+      <div class="start-box" id="startBox">
+        <div class="mascot">🐰💗</div>
+        <div style="font-weight:900;font-size:1.15rem;color:var(--ink-strong)">佳洵，準備好了嗎？</div>
+        <div class="note" style="text-align:center">一共 10 題，每答對 1 題收集 1 顆星星⭐<br>答錯的題目會自動存進錯題本📘</div>
+        <button class="big-btn" onclick="startQuiz()">出發！</button>
+      </div>
+      <div id="quizBox" style="display:none">
+        <div class="trail" id="trail"></div>
+        <div class="q-no num" id="qNo"></div>
+        <div class="q-text" id="qText"></div>
+        <div class="opts" id="opts"></div>
+        <div class="feedback" id="fb"></div>
+        <button class="next-btn" id="nextBtn" onclick="nextQ()">下一題 →</button>
+      </div>
+      <div class="result" id="resultBox" style="display:none"></div>
+    </div>
+  </section>
+</div>
+
+<script>
+/* ── 分頁切換 ── */
+document.querySelectorAll('.tab').forEach(t=>{
+  t.onclick=()=>{
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
+    document.querySelectorAll('.panel').forEach(x=>x.classList.remove('on'));
+    t.classList.add('on');
+    document.getElementById(t.dataset.p).classList.add('on');
+    window.scrollTo({top:0});
+  };
+});
+
+/* ── 題庫（10 題，對齊 1-1 ~ 1-3）── */
+const QS=[
+ {q:"2134 × 2 ＝ ？",o:["4268","4264","2268","4368"],a:0,
+  e:"每一位都乘 2：個位 4×2=8、十位 3×2=6、百位 1×2=2、千位 2×2=4 → 4268。"},
+ {q:"507 × 3 ＝ ？",o:["1501","1521","1571","521"],a:1,
+  e:"7×3=21 寫 1 進 2；十位是 0，0×3＋進位 2＝2；百位 5×3=15 → 1521。中間有 0 別漏算！"},
+ {q:"23 × 45 ＝ ？",o:["935","1035","1015","1135"],a:1,
+  e:"23×5=115，23×40=920（左移一格），115＋920＝1035。"},
+ {q:"36 × 20 ＝ ？",o:["720","72","620","7200"],a:0,
+  e:"先遮住 0：36×2=72，再補回 1 個 0 → 720。"},
+ {q:"304 × 12 ＝ ？",o:["3548","3648","3948","648"],a:1,
+  e:"304×2=608，304×10=3040，608＋3040＝3648。"},
+ {q:"25 × 16 ＝ ？",o:["300","400","415","250"],a:1,
+  e:"25×6=150，25×10=250，150＋250＝400。（小密技：25×4=100，16 裡有 4 個 4！）"},
+ {q:"600 × 70 ＝ ？",o:["4200","42000","420000","4900"],a:1,
+  e:"遮住尾巴的 0：6×7=42，總共遮了 3 個 0，補回去 → 42000。"},
+ {q:"已知 8 × 125 ＝ 1000，那 16 × 125 ＝ ？",o:["1500","2000","1250","1600"],a:1,
+  e:"16 是 8 的 2 倍，乘數不變、被乘數變 2 倍，答案也變 2 倍 → 2000。"},
+ {q:"一盒彩色筆有 24 枝，佳洵買了 18 盒，一共有幾枝？",o:["432 枝","342 枝","422 枝","382 枝"],a:0,
+  e:"24×18：24×8=192，24×10=240，192＋240＝432 枝。"},
+ {q:"遊樂園門票一張 135 元，全班 27 人要付多少元？",o:["3545 元","3645 元","2945 元","3745 元"],a:1,
+  e:"135×27：135×7=945，135×20=2700，945＋2700＝3645 元。"}
+];
+
+let cur=0,score=0,answered=false;
+const $=id=>document.getElementById(id);
+
+function startQuiz(){
+  cur=0;score=0;
+  $('startBox').style.display='none';
+  $('resultBox').style.display='none';
+  $('quizBox').style.display='block';
+  buildTrail();showQ();
+}
+function buildTrail(){
+  $('trail').innerHTML=QS.map((_,i)=>`<span class="dot" id="d${i}">${i+1}</span>`).join('');
+}
+function showQ(){
+  answered=false;
+  const q=QS[cur];
+  QS.forEach((_,i)=>{
+    const d=$('d'+i); d.classList.toggle('now',i===cur);
+    if(i===cur) d.textContent='🐰';
+    else if(!d.classList.contains('ok')&&!d.classList.contains('ng')) d.textContent=i+1;
+  });
+  $('qNo').textContent=`第 ${cur+1} / 10 題`;
+  $('qText').textContent=q.q;
+  $('fb').textContent='';$('fb').className='feedback';
+  $('nextBtn').style.display='none';
+  $('opts').innerHTML=q.o.map((t,i)=>
+    `<button class="opt" onclick="pick(${i},this)">${'🍓🍇🍊🍏'[ [0,2,4,6][i] ]||''} ${t}</button>`).join('');
+}
+function pick(i,btn){
+  if(answered)return;answered=true;
+  const q=QS[cur],ok=i===q.a;
+  document.querySelectorAll('.opt').forEach((b,j)=>{
+    b.disabled=true;
+    if(j===q.a)b.classList.add('ok');
+  });
+  const d=$('d'+cur);d.classList.remove('now');
+  if(ok){
+    score++;d.classList.add('ok');d.textContent='⭐';
+    $('fb').textContent='答對了！乘法高手！💖 '+q.e;$('fb').classList.add('good');
+  }else{
+    btn.classList.add('ng');d.classList.add('ng');d.textContent='💧';
+    $('fb').textContent='再想想～ '+q.e;$('fb').classList.add('bad');
+    saveWrong(q,i);
+  }
+  $('nextBtn').style.display='block';
+  $('nextBtn').textContent=cur===QS.length-1?'看成績 🎀':'下一題 →';
+}
+function nextQ(){cur++;cur<QS.length?showQ():finish();}
+
+function finish(){
+  $('quizBox').style.display='none';
+  const box=$('resultBox');box.style.display='block';
+  const face=score>=9?'🥳':score>=6?'😊':'💪';
+  const msg=score>=9?'太厲害了，乘法女王就是妳！':score>=6?'很棒！錯的題目去錯題本再練一次吧！':'沒關係，看看重點整理和影片，再挑戰一次！';
+  box.innerHTML=`
+    <div class="face">${face}</div>
+    <div class="score num">${score} / 10</div>
+    <div class="stars-line">${'⭐'.repeat(score)||'🌱'}</div>
+    <div class="msg">${msg}</div>
+    <button class="big-btn" onclick="startQuiz()">再挑戰一次</button><br><br>
+    <a class="ghost-btn" href="index.html" style="text-decoration:none">回首頁</a>`;
+  saveProgress();
+}
+
+/* ── localStorage：進度＋星星＋錯題本 ── */
+function saveProgress(){
+  try{
+    const key='sm_u2_best',old=+(localStorage.getItem(key)||0);
+    if(score>old){
+      localStorage.setItem(key,score);
+      const stars=+(localStorage.getItem('sm_stars')||0)+(score-old);
+      localStorage.setItem('sm_stars',stars);
+    }
+    const prog=JSON.parse(localStorage.getItem('sm_progress')||'{}');
+    prog.u2={done:Math.max(score,(prog.u2&&prog.u2.done)||0),total:10,ts:Date.now()};
+    localStorage.setItem('sm_progress',JSON.stringify(prog));
+  }catch(e){}
+}
+function saveWrong(q,chosen){
+  try{
+    const wrong=JSON.parse(localStorage.getItem('sm_wrong')||'[]');
+    const found=wrong.find(w=>w.unit==='u2'&&w.q===q.q);
+    if(found){found.count++;found.chosen=q.o[chosen];}
+    else wrong.push({unit:'u2',unitName:'乘法',q:q.q,options:q.o,answer:q.o[q.a],chosen:q.o[chosen],explain:q.e,count:1,ts:Date.now()});
+    localStorage.setItem('sm_wrong',JSON.stringify(wrong));
+  }catch(e){}
+}
+</script>
+</body>
+</html>

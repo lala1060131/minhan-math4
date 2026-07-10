@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>每日簽到｜數學冒險樂園</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Noto+Sans+TC:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --pink:#FF7EB6; --pink-deep:#F45D9E; --pink-soft:#FFD6E8;
+  --mint:#8BE9D0; --butter:#FFE66D;
+  --bg:#FDEBF4; --panel:#FFF8FC; --ink:#7A4A63; --ink-strong:#B94B7E; --ink-soft:#B48CA5;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Noto Sans TC',sans-serif;color:var(--ink);
+  background:linear-gradient(180deg,#D7F5E6 0%,#FDEBF4 40%,#FDF2F8 100%);min-height:100vh}
+.num{font-family:'Baloo 2','Noto Sans TC',sans-serif}
+button{font-family:inherit;cursor:pointer}
+button:focus-visible,a:focus-visible{outline:3px solid var(--pink);outline-offset:2px}
+.wrap{max-width:560px;margin:0 auto;padding:14px 14px 60px}
+.top{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.back{display:flex;align-items:center;gap:6px;background:#fff;border:2.5px solid var(--pink-soft);
+  border-radius:999px;padding:8px 16px;font-weight:900;font-size:.88rem;color:var(--pink-deep);
+  text-decoration:none;box-shadow:0 4px 10px rgba(244,93,158,.12)}
+.hero{background:linear-gradient(160deg,#D3F7E4,#E9FFF3);border:3px solid #9EE8C0;border-radius:28px;
+  padding:24px 22px;text-align:center;box-shadow:0 10px 24px rgba(87,199,133,.18);margin-bottom:14px}
+.hero h1{font-size:1.6rem;font-weight:900;color:#2FA362;letter-spacing:.08em}
+.hero .streak{font-size:2.6rem;font-weight:800;color:#2FA362;margin:6px 0}
+.hero .streak span{font-size:1rem;color:var(--ink-soft);font-weight:700}
+.checkin-btn{margin-top:8px;padding:15px 40px;font-size:1.05rem;font-weight:900;letter-spacing:.1em;
+  color:#fff;border:none;border-radius:999px;background:linear-gradient(135deg,#7EE0A8,#2FA362);
+  box-shadow:0 7px 0 #24824C;transition:transform .12s,box-shadow .12s}
+.checkin-btn:active{transform:translateY(4px);box-shadow:0 3px 0 #24824C}
+.checkin-btn:disabled{background:#D8E8DE;color:#9AB3A5;box-shadow:0 7px 0 #C2D6CA}
+.checkin-btn:disabled:active{transform:none}
+
+.card{background:var(--panel);border:2.5px solid var(--pink-soft);border-radius:24px;
+  padding:18px;box-shadow:0 8px 20px rgba(244,93,158,.1);margin-bottom:14px}
+.card h2{font-size:1.05rem;font-weight:900;color:var(--ink-strong);margin-bottom:12px;display:flex;align-items:center}
+.card h2 .nav{margin-left:auto;display:flex;gap:6px}
+.card h2 .nav button{background:#fff;border:2px solid #FFE1EF;border-radius:10px;padding:3px 10px;font-weight:900;color:var(--pink-deep)}
+.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center}
+.grid .wd{font-size:.72rem;font-weight:800;color:var(--ink-soft);padding-bottom:4px}
+.day{aspect-ratio:1;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-size:.8rem;font-weight:800;background:#fff;border:2px solid #F0DDE8;color:var(--ink-soft)}
+.day.today{border-color:var(--pink);color:var(--pink-deep)}
+.day.checked{background:linear-gradient(160deg,#9EE8C0,#6FD79E);border-color:#4FBE85;color:#fff}
+.day.checked .mark{font-size:1rem}
+.day.empty{visibility:hidden}
+
+.milestones{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px}
+.ms{flex:none;background:#fff;border:2px solid #F0DDE8;border-radius:16px;padding:10px 14px;text-align:center;min-width:74px}
+.ms.reached{border-color:var(--butter);background:#FFF9E0}
+.ms .n{font-size:1.3rem}
+.ms .t{font-size:.68rem;font-weight:800;color:var(--ink-soft)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <a class="back" href="index.html">← 回首頁</a>
+  </div>
+
+  <div class="hero">
+    <h1>📅 每日簽到</h1>
+    <div class="streak"><span id="streakNum">0</span> <span>天連續學習</span></div>
+    <button class="checkin-btn" id="checkinBtn">今天簽到 💚</button>
+  </div>
+
+  <div class="card">
+    <h2>本月簽到 <span class="nav"><button id="prevM">‹</button><span class="num" id="monthLabel" style="padding:0 6px;font-weight:800"></span><button id="nextM">›</button></span></h2>
+    <div class="grid" id="calGrid"></div>
+  </div>
+
+  <div class="card">
+    <h2>🎯 連續學習里程碑</h2>
+    <div class="milestones" id="milestones"></div>
+  </div>
+</div>
+
+<script>
+function todayStr(){
+  const d = new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+let checkins = [];
+try { checkins = JSON.parse(localStorage.getItem('sm_checkin') || '[]'); } catch(e){}
+
+function calcStreak(){
+  const set = new Set(checkins);
+  let streak = 0;
+  let d = new Date();
+  // 若今天還沒簽到，從昨天開始算連續
+  if(!set.has(todayStr())) d.setDate(d.getDate()-1);
+  while(true){
+    const s = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    if(set.has(s)){ streak++; d.setDate(d.getDate()-1); } else break;
+  }
+  return streak;
+}
+
+function render(){
+  const streak = calcStreak();
+  document.getElementById('streakNum').textContent = streak;
+  const done = checkins.includes(todayStr());
+  const btn = document.getElementById('checkinBtn');
+  btn.disabled = done;
+  btn.textContent = done ? '今天已經簽到囉 ✅' : '今天簽到 💚';
+
+  // 里程碑
+  const MS = [3,7,14,30];
+  document.getElementById('milestones').innerHTML = MS.map(m =>
+    `<div class="ms ${streak>=m?'reached':''}"><div class="n">${streak>=m?'🏅':'🔒'}</div><div class="t">${m}天</div></div>`
+  ).join('');
+
+  renderCalendar();
+}
+
+let viewYear, viewMonth;
+(function(){ const d=new Date(); viewYear=d.getFullYear(); viewMonth=d.getMonth(); })();
+
+function renderCalendar(){
+  document.getElementById('monthLabel').textContent = `${viewYear}/${String(viewMonth+1).padStart(2,'0')}`;
+  const first = new Date(viewYear, viewMonth, 1);
+  const startWeekday = first.getDay();
+  const daysInMonth = new Date(viewYear, viewMonth+1, 0).getDate();
+  const set = new Set(checkins);
+  const today = todayStr();
+
+  let html = ['日','一','二','三','四','五','六'].map(w=>`<div class="wd">${w}</div>`).join('');
+  for(let i=0;i<startWeekday;i++) html += `<div class="day empty"></div>`;
+  for(let d=1; d<=daysInMonth; d++){
+    const s = viewYear+'-'+String(viewMonth+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    const isToday = s === today;
+    const isChecked = set.has(s);
+    html += `<div class="day ${isToday?'today':''} ${isChecked?'checked':''}">
+      ${isChecked ? '<span class="mark">💚</span>' : d}
+    </div>`;
+  }
+  document.getElementById('calGrid').innerHTML = html;
+}
+
+document.getElementById('checkinBtn').onclick = () => {
+  const t = todayStr();
+  if(!checkins.includes(t)){
+    checkins.push(t);
+    try { localStorage.setItem('sm_checkin', JSON.stringify(checkins)); } catch(e){}
+  }
+  render();
+};
+document.getElementById('prevM').onclick = () => {
+  viewMonth--; if(viewMonth<0){viewMonth=11; viewYear--;}
+  renderCalendar();
+};
+document.getElementById('nextM').onclick = () => {
+  viewMonth++; if(viewMonth>11){viewMonth=0; viewYear++;}
+  renderCalendar();
+};
+
+render();
+</script>
+</body>
+</html>

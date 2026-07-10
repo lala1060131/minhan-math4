@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>我的收藏｜數學冒險樂園</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Noto+Sans+TC:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --pink:#FF7EB6; --pink-deep:#F45D9E; --pink-soft:#FFD6E8; --lavender:#CDB4FF;
+  --bg:#FDEBF4; --panel:#FFF8FC; --ink:#7A4A63; --ink-strong:#B94B7E; --ink-soft:#B48CA5;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Noto Sans TC',sans-serif;color:var(--ink);
+  background:linear-gradient(180deg,#F1E9FF 0%,#FDEBF4 40%,#FDF2F8 100%);min-height:100vh}
+.num{font-family:'Baloo 2','Noto Sans TC',sans-serif}
+a{text-decoration:none;color:inherit;font-family:inherit}
+.wrap{max-width:640px;margin:0 auto;padding:14px 14px 60px}
+.top{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.back{display:flex;align-items:center;gap:6px;background:#fff;border:2.5px solid var(--pink-soft);
+  border-radius:999px;padding:8px 16px;font-weight:900;font-size:.88rem;color:var(--pink-deep);
+  box-shadow:0 4px 10px rgba(244,93,158,.12)}
+.hero{background:linear-gradient(160deg,#EFE4FF,#FBEAFF);border:3px solid #DCC5FF;border-radius:28px;
+  padding:20px 22px;text-align:center;box-shadow:0 10px 24px rgba(164,124,255,.15);margin-bottom:14px}
+.hero h1{font-size:1.6rem;font-weight:900;color:#8A5CF0;letter-spacing:.08em}
+.hero .sub{font-size:.82rem;font-weight:700;color:var(--ink-soft);margin-top:4px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.card{position:relative;background:#fff;border:2.5px solid #E0CFFF;border-radius:22px;
+  padding:16px 12px 12px;text-align:center;box-shadow:0 8px 18px rgba(164,124,255,.12)}
+.card .emoji{font-size:2.2rem;margin-bottom:6px}
+.card .name{font-size:.92rem;font-weight:900;color:var(--ink)}
+.card .unstar{position:absolute;top:8px;right:8px;background:none;border:none;font-size:1.2rem;cursor:pointer}
+.card a.go{display:block;margin-top:10px;background:linear-gradient(135deg,#CDB4FF,#8A5CF0);color:#fff;
+  border-radius:999px;padding:8px;font-size:.8rem;font-weight:900;box-shadow:0 4px 0 #6B3FD6}
+.empty{text-align:center;padding:50px 20px;background:var(--panel);border:2.5px dashed #DCC5FF;border-radius:24px}
+.empty .face{font-size:3.6rem}
+.empty .t{font-weight:900;font-size:1.1rem;color:var(--ink-strong);margin:10px 0 4px}
+.empty .s{font-size:.85rem;color:var(--ink-soft);font-weight:700;line-height:1.7}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <a class="back" href="index.html">← 回首頁</a>
+  </div>
+  <div class="hero">
+    <h1>💜 我的收藏</h1>
+    <div class="sub">把喜歡或想常常複習的單元收藏起來！</div>
+  </div>
+  <div id="content"></div>
+</div>
+
+<script>
+const UNIT_NAMES = {
+  u1:['🔢','一億以內的數'], u2:['✖️','乘法'], u3:['📐','角度'],
+  u4:['🍰','假分數與帶分數'], u5:['🚗','公里'], u6:['➗','除法'],
+  u7:['🔺','三角形與全等'], u8:['🧮','兩步驟問題與併式'],
+  u9:['🔢','二位小數'], u10:['📊','統計圖表']
+};
+
+function getFavs(){ try{ return JSON.parse(localStorage.getItem('sm_favorites')||'[]'); }catch(e){ return []; } }
+function setFavs(f){ try{ localStorage.setItem('sm_favorites', JSON.stringify(f)); }catch(e){} }
+
+function render(){
+  const favs = getFavs();
+  const el = document.getElementById('content');
+  if(!favs.length){
+    el.innerHTML = `<div class="empty">
+      <div class="face">🐰💜</div>
+      <div class="t">還沒有收藏任何單元</div>
+      <div class="s">在首頁單元卡片上點一下星星圖示，<br>就可以把喜歡的單元收藏在這裡囉！</div>
+    </div>`;
+    return;
+  }
+  el.innerHTML = `<div class="grid">` + favs.map(id => {
+    const [emoji,name] = UNIT_NAMES[id] || ['📘','未知單元'];
+    const filename = 'unit' + id.slice(1) + '.html';
+    return `<div class="card">
+      <button class="unstar" onclick="removeFav('${id}')" aria-label="取消收藏">💜</button>
+      <div class="emoji">${emoji}</div>
+      <div class="name">${name}</div>
+      <a class="go" href="${filename}">前往學習</a>
+    </div>`;
+  }).join('') + `</div>`;
+}
+function removeFav(id){
+  setFavs(getFavs().filter(x => x !== id));
+  render();
+}
+render();
+</script>
+</body>
+</html>

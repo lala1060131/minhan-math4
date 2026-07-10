@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>設定｜數學冒險樂園</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Noto+Sans+TC:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --pink:#FF7EB6; --pink-deep:#F45D9E; --pink-soft:#FFD6E8;
+  --bg:#FDEBF4; --panel:#FFF8FC; --ink:#7A4A63; --ink-strong:#B94B7E; --ink-soft:#B48CA5;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Noto Sans TC',sans-serif;color:var(--ink);
+  background:linear-gradient(180deg,#FBD9EC 0%,#FDEBF4 40%,#FDF2F8 100%);min-height:100vh}
+button,input{font-family:inherit}
+a{text-decoration:none;color:inherit}
+.wrap{max-width:520px;margin:0 auto;padding:14px 14px 60px}
+.top{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.back{display:flex;align-items:center;gap:6px;background:#fff;border:2.5px solid var(--pink-soft);
+  border-radius:999px;padding:8px 16px;font-weight:900;font-size:.88rem;color:var(--pink-deep);
+  box-shadow:0 4px 10px rgba(244,93,158,.12)}
+.hero{background:linear-gradient(160deg,#FFE3F1,#F3EAFF);border:3px solid #FFC7DE;border-radius:28px;
+  padding:20px 22px;text-align:center;box-shadow:0 10px 24px rgba(244,93,158,.15);margin-bottom:14px}
+.hero h1{font-size:1.6rem;font-weight:900;color:var(--ink-strong)}
+
+.card{background:#FFF8FC;border:2.5px solid var(--pink-soft);border-radius:24px;
+  padding:18px;box-shadow:0 8px 20px rgba(244,93,158,.1);margin-bottom:14px}
+.card h2{font-size:1rem;font-weight:900;color:var(--ink-strong);margin-bottom:12px}
+.row{display:flex;gap:10px;align-items:center}
+.row input{flex:1;border:2.5px solid #F0DDE8;border-radius:14px;padding:11px 14px;font-size:.95rem;font-weight:800;color:var(--ink)}
+.row input:focus{outline:none;border-color:var(--pink)}
+.save-btn{flex:none;background:linear-gradient(135deg,#FF9DC7,var(--pink-deep));color:#fff;border:none;
+  border-radius:14px;padding:11px 18px;font-weight:900;font-size:.9rem;box-shadow:0 4px 0 #E0498B}
+.saved-msg{font-size:.78rem;color:#2FA362;font-weight:800;margin-top:8px;height:1em}
+
+.danger-card{border-color:#FFC9C9}
+.danger-card h2{color:#E14F4F}
+.danger-btn{width:100%;background:#fff;border:2.5px solid #FFC9C9;color:#E14F4F;border-radius:14px;
+  padding:12px;font-weight:900;font-size:.9rem;margin-top:6px}
+.danger-note{font-size:.78rem;color:var(--ink-soft);font-weight:700;margin-top:8px;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <a class="back" href="index.html">← 回首頁</a>
+  </div>
+  <div class="hero"><h1>⚙️ 設定</h1></div>
+
+  <div class="card">
+    <h2>👧 我的名字</h2>
+    <div class="row">
+      <input type="text" id="nameInput" maxlength="10" placeholder="輸入名字">
+      <button class="save-btn" id="saveNameBtn">儲存</button>
+    </div>
+    <div class="saved-msg" id="savedMsg"></div>
+  </div>
+
+  <div class="card danger-card">
+    <h2>🗑 重置學習進度</h2>
+    <div class="danger-note">這會清空所有單元分數、星星、錯題本、簽到紀錄和收藏，且無法復原，請小心使用。</div>
+    <button class="danger-btn" id="resetBtn">重置全部進度</button>
+  </div>
+</div>
+
+<script>
+const nameInput = document.getElementById('nameInput');
+try { nameInput.value = localStorage.getItem('sm_name') || '佳洵'; } catch(e){ nameInput.value = '佳洵'; }
+
+document.getElementById('saveNameBtn').onclick = () => {
+  const v = nameInput.value.trim() || '佳洵';
+  try { localStorage.setItem('sm_name', v); } catch(e){}
+  const msg = document.getElementById('savedMsg');
+  msg.textContent = '✅ 已儲存！回首頁就會看到新名字';
+  setTimeout(()=>{ msg.textContent=''; }, 3000);
+};
+
+document.getElementById('resetBtn').onclick = () => {
+  if(confirm('確定要重置全部學習進度嗎？這個動作沒辦法復原喔！')){
+    if(confirm('再次確認：真的要清空所有分數、星星、錯題本和簽到紀錄嗎？')){
+      try {
+        ['sm_progress','sm_stars','sm_wrong','sm_checkin','sm_favorites',
+         'sm_u1_best','sm_u2_best','sm_u3_best','sm_u4_best','sm_u5_best',
+         'sm_u6_best','sm_u7_best','sm_u8_best','sm_u9_best','sm_u10_best']
+          .forEach(k => localStorage.removeItem(k));
+      } catch(e){}
+      alert('已重置完成！回到首頁重新開始學習吧 💗');
+      location.href = 'index.html';
+    }
+  }
+};
+</script>
+</body>
+</html>

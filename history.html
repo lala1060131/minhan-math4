@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>學習紀錄｜數學冒險樂園</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Noto+Sans+TC:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --pink:#FF7EB6; --pink-deep:#F45D9E; --pink-soft:#FFD6E8;
+  --lavender:#CDB4FF; --mint:#8BE9D0; --butter:#FFE66D;
+  --bg:#FDEBF4; --panel:#FFF8FC; --ink:#7A4A63; --ink-strong:#B94B7E; --ink-soft:#B48CA5;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Noto Sans TC',sans-serif;color:var(--ink);
+  background:linear-gradient(180deg,#FBD9EC 0%,#FDEBF4 40%,#FDF2F8 100%);min-height:100vh}
+.num{font-family:'Baloo 2','Noto Sans TC',sans-serif}
+button,a{font-family:inherit}
+a{text-decoration:none;color:inherit}
+.wrap{max-width:720px;margin:0 auto;padding:14px 14px 60px}
+.top{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.back{display:flex;align-items:center;gap:6px;background:#fff;border:2.5px solid var(--pink-soft);
+  border-radius:999px;padding:8px 16px;font-weight:900;font-size:.88rem;color:var(--pink-deep);
+  box-shadow:0 4px 10px rgba(244,93,158,.12)}
+.hero{background:linear-gradient(160deg,#FFF3D9,#FFE3F1);border:3px solid #FFD6A8;border-radius:28px;
+  padding:20px 22px;text-align:center;box-shadow:0 10px 24px rgba(244,163,93,.15);margin-bottom:14px}
+.hero h1{font-size:1.6rem;font-weight:900;color:#C1793E;letter-spacing:.08em}
+.hero .sub{font-size:.82rem;font-weight:700;color:var(--ink-soft);margin-top:4px}
+
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+@media(max-width:520px){.stats{grid-template-columns:repeat(2,1fr)}}
+.stat{background:var(--panel);border:2.5px solid var(--pink-soft);border-radius:20px;
+  padding:14px 8px;text-align:center;box-shadow:0 6px 16px rgba(244,93,158,.1)}
+.stat .ico{font-size:1.7rem}
+.stat .val{font-size:1.4rem;font-weight:800;color:var(--ink-strong)}
+.stat .lab{font-size:.7rem;font-weight:700;color:var(--ink-soft)}
+
+.card{background:var(--panel);border:2.5px solid var(--pink-soft);border-radius:24px;
+  padding:18px;box-shadow:0 8px 20px rgba(244,93,158,.1);margin-bottom:14px}
+.card h2{font-size:1.05rem;font-weight:900;color:var(--ink-strong);margin-bottom:14px}
+
+.urow{display:flex;align-items:center;gap:12px;padding:10px 4px;border-bottom:1.5px dashed #F0DDE8}
+.urow:last-child{border-bottom:none}
+.urow .emoji{font-size:1.6rem;flex:none;width:32px;text-align:center}
+.urow .info{flex:1;min-width:0}
+.urow .name{font-size:.9rem;font-weight:900;color:var(--ink)}
+.ubar{height:9px;border-radius:99px;background:#F0DDE8;margin-top:5px;overflow:hidden}
+.ubar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#FF9DC7,#F45D9E)}
+.urow .score{flex:none;font-size:.85rem;font-weight:900;color:var(--pink-deep);width:52px;text-align:right}
+.urow.notdone{opacity:.5}
+.urow .badge{flex:none;font-size:1.1rem}
+
+.empty{text-align:center;padding:36px 14px;color:var(--ink-soft);font-weight:700;font-size:.9rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <a class="back" href="index.html">← 回首頁</a>
+  </div>
+
+  <div class="hero">
+    <h1>📊 學習紀錄</h1>
+    <div class="sub">佳洵的學習足跡都在這裡！</div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="ico">⭐</div><div class="val num" id="totalStars">0</div><div class="lab">總星星</div></div>
+    <div class="stat"><div class="ico">✅</div><div class="val num" id="doneUnits">0/10</div><div class="lab">完成單元</div></div>
+    <div class="stat"><div class="ico">📝</div><div class="val num" id="avgScore">0</div><div class="lab">平均分數</div></div>
+    <div class="stat"><div class="ico">🏆</div><div class="val num" id="perfectUnits">0</div><div class="lab">滿分單元</div></div>
+  </div>
+
+  <div class="card">
+    <h2>🍭 各單元進度</h2>
+    <div id="unitList"></div>
+  </div>
+</div>
+
+<script>
+const UNITS = [
+  {id:'u1', emoji:'🔢', name:'一億以內的數'},
+  {id:'u2', emoji:'✖️', name:'乘法'},
+  {id:'u3', emoji:'📐', name:'角度'},
+  {id:'u4', emoji:'🍰', name:'假分數與帶分數'},
+  {id:'u5', emoji:'🚗', name:'公里'},
+  {id:'u6', emoji:'➗', name:'除法'},
+  {id:'u7', emoji:'🔺', name:'三角形與全等'},
+  {id:'u8', emoji:'🧮', name:'兩步驟問題與併式'},
+  {id:'u9', emoji:'🔢', name:'二位小數'},
+  {id:'u10', emoji:'📊', name:'統計圖表'},
+];
+
+let prog = {};
+try { prog = JSON.parse(localStorage.getItem('sm_progress') || '{}'); } catch(e){}
+let stars = 0;
+try { stars = +(localStorage.getItem('sm_stars') || 0); } catch(e){}
+
+const doneList = UNITS.filter(u => prog[u.id] && prog[u.id].done > 0);
+const scores = doneList.map(u => prog[u.id].done);
+const avg = scores.length ? Math.round(scores.reduce((a,b)=>a+b,0)/scores.length*10)/10 : 0;
+const perfect = UNITS.filter(u => prog[u.id] && prog[u.id].done >= 10).length;
+
+document.getElementById('totalStars').textContent = stars;
+document.getElementById('doneUnits').textContent = doneList.length + '/10';
+document.getElementById('avgScore').textContent = avg;
+document.getElementById('perfectUnits').textContent = perfect;
+
+const listEl = document.getElementById('unitList');
+listEl.innerHTML = UNITS.map(u => {
+  const d = prog[u.id] ? prog[u.id].done : 0;
+  const started = !!prog[u.id];
+  const badge = d >= 10 ? '🏆' : d >= 8 ? '⭐' : '';
+  const pct = d * 10;
+  const filename = 'unit' + u.id.slice(1) + '.html';
+  return `<a class="urow ${started?'':'notdone'}" href="${filename}">
+      <div class="emoji">${u.emoji}</div>
+      <div class="info">
+        <div class="name">${u.name}</div>
+        <div class="ubar"><i style="width:${pct}%"></i></div>
+      </div>
+      <div class="score num">${started ? d+'/10' : '未開始'}</div>
+      <div class="badge">${badge}</div>
+    </a>`;
+}).join('');
+</script>
+</body>
+</html>

@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>單元 1 一億以內的數｜數學冒險樂園</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Noto+Sans+TC:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --pink:#FF7EB6; --pink-deep:#F45D9E; --pink-soft:#FFD6E8;
+  --lavender:#CDB4FF; --mint:#8BE9D0; --butter:#FFE66D;
+  --bg:#FDEBF4; --panel:#FFF8FC; --ink:#7A4A63; --ink-strong:#B94B7E; --ink-soft:#B48CA5;
+  --good:#57C785; --bad:#F87171;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Noto Sans TC',sans-serif;color:var(--ink);
+  background:linear-gradient(180deg,#FBD9EC 0%,#FDEBF4 40%,#FDF2F8 100%);min-height:100vh}
+.num{font-family:'Baloo 2','Noto Sans TC',sans-serif}
+button{font-family:inherit;cursor:pointer}
+button:focus-visible,a:focus-visible{outline:3px solid var(--lavender);outline-offset:2px}
+.wrap{max-width:720px;margin:0 auto;padding:14px 14px 60px}
+
+/* ── 頂欄 ── */
+.top{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.back{display:flex;align-items:center;gap:6px;background:#fff;border:2.5px solid var(--pink-soft);
+  border-radius:999px;padding:8px 16px;font-weight:900;font-size:.88rem;color:var(--pink-deep);
+  text-decoration:none;box-shadow:0 4px 10px rgba(244,93,158,.12)}
+.unit-tag{margin-left:auto;background:#FF7EB6;color:#fff;border-radius:999px;padding:8px 16px;
+  font-weight:900;font-size:.85rem;box-shadow:0 4px 0 #E0498B}
+
+/* ── 標題卡 ── */
+.hero{background:linear-gradient(160deg,#FFE3F1,#F3EAFF);border:3px solid #FFC7DE;border-radius:28px;
+  padding:20px 22px;text-align:center;box-shadow:0 10px 24px rgba(244,93,158,.15);margin-bottom:14px;position:relative}
+.hero h1{font-size:1.6rem;font-weight:900;color:var(--ink-strong);letter-spacing:.08em}
+.hero .sub{font-size:.82rem;font-weight:700;color:var(--ink-soft);margin-top:4px}
+.hero .deco{position:absolute;font-size:1.4rem;opacity:.7}
+
+/* ── 分頁列 ── */
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.tab{border:3px solid transparent;border-radius:20px;padding:12px 6px;background:#fff;
+  font-weight:900;font-size:.95rem;color:var(--ink-soft);box-shadow:0 5px 12px rgba(244,93,158,.1);
+  transition:transform .12s}
+.tab .ico{display:block;font-size:1.4rem;margin-bottom:3px}
+.tab.on{color:var(--pink-deep);border-color:#FFB7D6;background:linear-gradient(180deg,#FFF,#FFF0F7);
+  transform:translateY(-3px)}
+.panel{display:none}.panel.on{display:block;animation:pop .25s ease}
+@keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.panel.on{animation:none}}
+
+/* ── 卡片通用 ── */
+.card{background:var(--panel);border:2.5px solid var(--pink-soft);border-radius:24px;
+  padding:18px;box-shadow:0 8px 20px rgba(244,93,158,.1);margin-bottom:14px}
+.card h2{font-size:1.05rem;font-weight:900;color:var(--ink-strong);margin-bottom:10px;
+  display:flex;align-items:center;gap:8px}
+.card h2 .chip{font-size:.68rem;background:#F3EAFF;color:#8A5CF0;border-radius:999px;padding:3px 10px}
+
+/* ── 重點整理 ── */
+.rule{display:flex;gap:12px;align-items:flex-start;background:#fff;border:2px solid #FFE3F0;
+  border-radius:18px;padding:12px 14px;margin-bottom:10px;font-size:.95rem;line-height:1.7}
+.rule .n{flex:none;width:30px;height:30px;border-radius:50%;background:var(--pink);color:#fff;
+  display:grid;place-items:center;font-weight:800}
+.rule b{color:var(--pink-deep)}
+.place-table{width:100%;border-collapse:separate;border-spacing:3px;text-align:center;margin:8px 0 4px}
+.place-table th{background:#FFD6E8;color:#B94B7E;border-radius:10px;padding:7px 2px;font-size:.72rem}
+.place-table td{background:#fff;border:2px solid #F3EAFF;border-radius:10px;padding:8px 2px;
+  font-family:'Baloo 2',sans-serif;font-size:1.15rem;font-weight:800;color:#8A5CF0}
+.example{background:linear-gradient(160deg,#FFF8EA,#FFF3DB);border:2px dashed #F4C56D;
+  border-radius:18px;padding:14px;font-size:.95rem;line-height:1.9}
+.example .step{display:flex;gap:10px;margin-top:6px}
+.example .step .s{flex:none;background:#F4A24B;color:#fff;border-radius:999px;font-size:.72rem;
+  font-weight:900;padding:3px 10px;height:fit-content;margin-top:3px}
+
+/* ── 影片區（點縮圖開新視窗播放） ── */
+.vgroup{font-size:.85rem;font-weight:900;color:#8A5CF0;margin:14px 4px 8px}
+.vcard{display:flex;gap:12px;align-items:center;background:#fff;border:2.5px solid #E0CFFF;
+  border-radius:20px;padding:10px;margin-bottom:10px;text-decoration:none;color:var(--ink);
+  transition:transform .12s,box-shadow .12s}
+.vcard:hover{transform:translateY(-3px);box-shadow:0 10px 20px rgba(164,124,255,.2)}
+.vcard img{width:120px;border-radius:14px;border:2px solid #F3EAFF;flex:none}
+.vcard .t{font-weight:900;font-size:.92rem;line-height:1.5}
+.vcard .go{margin-left:auto;flex:none;background:#A47CFF;color:#fff;border-radius:999px;
+  padding:6px 12px;font-size:.75rem;font-weight:900;box-shadow:0 3px 0 #8A5CF0}
+.link-pill{display:inline-block;background:#fff;border:2px solid #C4EDD2;color:#2FA362;border-radius:999px;
+  padding:7px 14px;font-size:.8rem;font-weight:800;text-decoration:none;margin:0 6px 8px 0}
+.note{font-size:.78rem;color:var(--ink-soft);font-weight:700;margin-top:6px;line-height:1.6}
+
+/* ── 測驗區 ── */
+.start-box{text-align:center;padding:26px 10px}
+.start-box .mascot{font-size:3.6rem}
+.big-btn{display:inline-block;margin-top:14px;padding:16px 44px;font-size:1.2rem;font-weight:900;
+  letter-spacing:.2em;text-indent:.2em;color:#fff;border:none;border-radius:999px;
+  background:linear-gradient(135deg,#FF9DC7,var(--pink) 55%,var(--pink-deep));
+  box-shadow:0 8px 0 #E0498B,0 14px 26px rgba(255,126,182,.4);transition:transform .12s,box-shadow .12s}
+.big-btn:active{transform:translateY(5px);box-shadow:0 3px 0 #E0498B}
+.trail{display:flex;justify-content:space-between;align-items:center;margin:4px 2px 16px}
+.dot{width:20px;height:20px;border-radius:50%;background:#F0DDE8;display:grid;place-items:center;font-size:.7rem}
+.dot.now{background:var(--butter);box-shadow:0 0 0 4px #FFF3C2;font-size:.95rem}
+.dot.ok{background:var(--mint)}.dot.ng{background:#FFC9C9}
+.q-no{font-size:.8rem;font-weight:900;color:var(--ink-soft);margin-bottom:6px}
+.q-text{font-size:1.15rem;font-weight:900;color:var(--ink-strong);line-height:1.7;margin-bottom:14px}
+.opts{display:grid;gap:10px}
+.opt{text-align:left;background:#fff;border:2.5px solid #F0DDE8;border-radius:18px;padding:13px 16px;
+  font-size:1rem;font-weight:800;color:var(--ink);transition:transform .1s,border-color .1s}
+.opt:hover{border-color:#FFB7D6}
+.opt.ok{border-color:var(--good);background:#EAFBF0;color:#2FA362}
+.opt.ng{border-color:var(--bad);background:#FFF1F1;color:#E14F4F;animation:shake .3s}
+.opt:disabled{cursor:default}
+@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.feedback{margin-top:12px;font-weight:900;font-size:.95rem;min-height:1.6em}
+.feedback.good{color:var(--good)}.feedback.bad{color:var(--bad)}
+.next-btn{display:none;margin:14px auto 0;padding:11px 34px;font-size:1rem;font-weight:900;color:#fff;
+  border:none;border-radius:999px;background:#A47CFF;box-shadow:0 5px 0 #8A5CF0}
+.next-btn:active{transform:translateY(3px);box-shadow:0 2px 0 #8A5CF0}
+.result{text-align:center;padding:20px 8px}
+.result .face{font-size:3.6rem}
+.result .score{font-size:2.4rem;font-weight:800;color:var(--pink-deep)}
+.result .stars-line{font-size:1.6rem;letter-spacing:.1em;margin:8px 0}
+.result .msg{font-weight:900;color:var(--ink-strong);margin-bottom:14px}
+.ghost-btn{background:#fff;border:2.5px solid #FFB7D6;color:var(--pink-deep);border-radius:999px;
+  padding:10px 24px;font-weight:900;margin:0 5px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <a class="back" href="index.html">← 回首頁</a>
+    <span class="unit-tag">翰林四上 ・ 單元 1</span>
+  </div>
+
+  <div class="hero">
+    <span class="deco" style="top:10px;left:14px">🌸</span>
+    <span class="deco" style="top:12px;right:16px">⭐</span>
+    <h1>🔢 一億以內的數</h1>
+    <div class="sub">1-1 十萬以內的數 ・ 1-2 一億以內的數 ・ 1-3 大小比較與加減</div>
+  </div>
+
+  <div class="tabs" role="tablist">
+    <button class="tab on" data-p="p1"><span class="ico">📖</span>重點整理</button>
+    <button class="tab" data-p="p2"><span class="ico">🎬</span>教學影片</button>
+    <button class="tab" data-p="p3"><span class="ico">💗</span>開始挑戰</button>
+  </div>
+
+  <!-- ═══ 重點整理 ═══ -->
+  <section class="panel on" id="p1">
+    <div class="card">
+      <h2>🍭 三個必記重點</h2>
+      <div class="rule"><span class="n">1</span><div>
+        <b>位值表要記牢！</b>從右邊數過來：個、十、百、千、萬、十萬、百萬、千萬。
+        每一位<b>滿 10 就往左進 1</b>，10 個千萬就是「一億」。
+        <table class="place-table"><tr>
+          <th>千萬</th><th>百萬</th><th>十萬</th><th>萬</th><th>千</th><th>百</th><th>十</th><th>個</th></tr>
+          <tr><td>3</td><td>5</td><td>7</td><td>2</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+        </table>
+        <span style="font-size:.85rem">👆 這個數是「三千五百七十二萬」</span>
+      </div></div>
+      <div class="rule"><span class="n">2</span><div>
+        <b>讀數從高位開始</b>，用「萬」當分界最不會亂：先讀萬以上的部分＋「萬」，再讀後面四位。
+        中間有 0 要讀「零」，<b>連續好幾個 0 只讀一次零</b>；尾巴的 0 不用讀。
+      </div></div>
+      <div class="rule"><span class="n">3</span><div>
+        <b>比大小先數位數！</b>位數多的一定比較大；位數一樣多，就從<b>最高位</b>開始一位一位比。
+        大數加減用直式，記得<b>位值要對齊</b>，滿十進一、不夠借一。
+      </div></div>
+    </div>
+
+    <div class="card">
+      <h2>🌟 範例：讀讀看 30570000</h2>
+      <div class="example">
+        <div class="step"><span class="s">第1步</span><div>從右邊往左<b>每四位切一刀</b>：3057｜0000</div></div>
+        <div class="step"><span class="s">第2步</span><div>前面的「3057」讀作<b>三千零五十七</b>，後面加上「<b>萬</b>」</div></div>
+        <div class="step"><span class="s">第3步</span><div>後四位是 0000，不用讀</div></div>
+        <div class="step"><span class="s">答案</span><div>30570000 讀作「<b>三千零五十七萬</b>」🎉</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ 教學影片 ═══ -->
+  <section class="panel" id="p2">
+    <div class="card">
+      <h2>🎬 均一素養動畫 <span class="chip">點縮圖開新視窗播放</span></h2>
+
+      <div class="vgroup">🩷 1-1 十萬以內的數</div>
+      <a class="vcard" href="https://www.junyiacademy.org/course-compare/math_curriculum/curriculum_v108/v108_g04/v108_n-4/v108_n-4-01/v/zXo2iCsYnjs" target="_blank" rel="noopener">
+        <img src="https://img.youtube.com/vi/zXo2iCsYnjs/mqdefault.jpg" alt="" loading="lazy">
+        <span class="t">【概念】認識十萬以內的數</span><span class="go">▶ 播放</span>
+      </a>
+
+      <div class="vgroup">💜 1-2 一億以內的數</div>
+      <a class="vcard" href="https://www.junyiacademy.org/course-compare/math-elem/math-4/j-m4a/j-m4a-c01/jnc-4-01-1b/v/OXsnddZ7N4Y" target="_blank" rel="noopener">
+        <img src="https://img.youtube.com/vi/OXsnddZ7N4Y/mqdefault.jpg" alt="" loading="lazy">
+        <span class="t">【素養動畫】【觀念】認識一億以內的數</span><span class="go">▶ 播放</span>
+      </a>
+
+      <div class="vgroup">💙 1-3 大數的大小比較與加減</div>
+      <a class="vcard" href="https://www.junyiacademy.org/junyi-math/men/menzs/menzs4e/v/_onJnhIMjZY" target="_blank" rel="noopener">
+        <img src="https://img.youtube.com/vi/_onJnhIMjZY/mqdefault.jpg" alt="" loading="lazy">
+        <span class="t">【觀念】大數的大小比較</span><span class="go">▶ 播放</span>
+      </a>
+      <a class="vcard" href="https://www.junyiacademy.org/course-compare/math-grade-4-a/g04-menzs4e/v/ULzpG5xR8us" target="_blank" rel="noopener">
+        <img src="https://img.youtube.com/vi/ULzpG5xR8us/mqdefault.jpg" alt="" loading="lazy">
+        <span class="t">【解題】大數的加法計算</span><span class="go">▶ 播放</span>
+      </a>
+      <a class="vcard" href="https://www.junyiacademy.org/junyi-math/men/menzs/menzs4e/v/O1lyymPX1I4" target="_blank" rel="noopener">
+        <img src="https://img.youtube.com/vi/O1lyymPX1I4/mqdefault.jpg" alt="" loading="lazy">
+        <span class="t">【解題】大數的減法計算</span><span class="go">▶ 播放</span>
+      </a>
+    </div>
+
+    <div class="card">
+      <h2>📝 均一延伸練習 <span class="chip">寫完挑戰想加練再來</span></h2>
+      <a class="link-pill" href="https://www.junyiacademy.org/exam/84e3f47167df4266866329dbdcc621d0" target="_blank" rel="noopener">🎯 官方前測：翰林四上第一單元</a>
+      <a class="link-pill" href="https://www.junyiacademy.org/exercises/menzs4af" target="_blank" rel="noopener">十萬以內的數</a>
+      <a class="link-pill" href="https://www.junyiacademy.org/exercises/jnc-4-01-1-1b" target="_blank" rel="noopener">十萬以內的數的讀寫</a>
+      <a class="link-pill" href="https://www.junyiacademy.org/exercises/jnc-4-01-2-1a" target="_blank" rel="noopener">十萬以內數的位值</a>
+      <a class="link-pill" href="https://www.junyiacademy.org/exercises/menzs4ag" target="_blank" rel="noopener">一千萬以內的數</a>
+      <a class="link-pill" href="https://www.junyiacademy.org/exercises/jnc-4-01-2-2a" target="_blank" rel="noopener">千萬以內各數的位值</a>
+      <a class="link-pill" href="https://www.junyiacademy.org/exercises/jnc-4-01-2-2b" target="_blank" rel="noopener">一億以內數的換算</a>
+      <a class="link-pill" href="https://www.junyiacademy.org/exercises/jnc-4-01-2-3a" target="_blank" rel="noopener">大數的大小比較</a>
+      <a class="link-pill" href="https://www.junyiacademy.org/exercises/jnc-4-01-2-4a" target="_blank" rel="noopener">大數的加減直式運算</a>
+      <p class="note">💡 影片和練習都會開「新視窗」到均一教育平台，看完關掉就回到這裡囉！</p>
+    </div>
+  </section>
+
+  <!-- ═══ 開始挑戰 ═══ -->
+  <section class="panel" id="p3">
+    <div class="card" id="quizCard">
+      <div class="start-box" id="startBox">
+        <div class="mascot">🐰💗</div>
+        <div style="font-weight:900;font-size:1.15rem;color:var(--ink-strong)">佳洵，準備好了嗎？</div>
+        <div class="note" style="text-align:center">一共 10 題，每答對 1 題收集 1 顆星星⭐<br>答錯的題目會自動存進錯題本📘</div>
+        <button class="big-btn" onclick="startQuiz()">出發！</button>
+      </div>
+      <div id="quizBox" style="display:none">
+        <div class="trail" id="trail"></div>
+        <div class="q-no num" id="qNo"></div>
+        <div class="q-text" id="qText"></div>
+        <div class="opts" id="opts"></div>
+        <div class="feedback" id="fb"></div>
+        <button class="next-btn" id="nextBtn" onclick="nextQ()">下一題 →</button>
+      </div>
+      <div class="result" id="resultBox" style="display:none"></div>
+    </div>
+  </section>
+</div>
+
+<script>
+/* ── 分頁切換 ── */
+document.querySelectorAll('.tab').forEach(t=>{
+  t.onclick=()=>{
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
+    document.querySelectorAll('.panel').forEach(x=>x.classList.remove('on'));
+    t.classList.add('on');
+    document.getElementById(t.dataset.p).classList.add('on');
+    window.scrollTo({top:0});
+  };
+});
+
+/* ── 題庫（10 題，對齊 1-1 ~ 1-3）── */
+const QS=[
+ {q:"「86543」裡面的 8，是在哪一位呢？",o:["千位","萬位","十萬位","百位"],a:1,
+  e:"從右邊數：個、十、百、千、萬，8 排在第五位，就是萬位！"},
+ {q:"10 個「一百萬」合起來是多少？",o:["十萬","一百萬","一千萬","一億"],a:2,
+  e:"每一位滿 10 往左進 1，10 個一百萬＝一千萬。"},
+ {q:"「四千零六十二萬」用數字寫出來是？",o:["4062000","40620000","40062000","46200000"],a:1,
+  e:"四千零六十二萬＝4062 個萬，後面補四個 0 → 40620000。"},
+ {q:"35720000 裡面的 5，是在哪一位？",o:["十萬位","萬位","百萬位","千萬位"],a:2,
+  e:"3 在千萬位，往右一位的 5 就是百萬位。"},
+ {q:"70000 是幾個「一萬」呢？",o:["7 個","70 個","700 個","7000 個"],a:0,
+  e:"70000 切四位是 7｜0000，就是 7 個一萬。"},
+ {q:"「一億」是幾個「一千萬」？",o:["5 個","10 個","100 個","1000 個"],a:1,
+  e:"10 個一千萬就進位變成一億！"},
+ {q:"下面哪一個數最大？",o:["9876543","10234567","9987654","9999999"],a:1,
+  e:"先數位數：10234567 有 8 位數，其他都只有 7 位，位數多的最大！"},
+ {q:"比比看：45670000 ○ 45760000，○ 裡要填什麼？",o:["＞","＜","＝","不能比"],a:1,
+  e:"位數一樣，從高位比：千萬位、百萬位都相同，十萬位 6＜7，所以是 ＜。"},
+ {q:"320000 ＋ 58000 ＝ ？",o:["370000","378000","380000","900000"],a:1,
+  e:"位值對齊直式加：32 萬＋5 萬 8 千＝37 萬 8 千。"},
+ {q:"510000 － 260000 ＝ ？",o:["350000","250000","260000","240000"],a:1,
+  e:"51 萬－26 萬＝25 萬，也就是 250000。"}
+];
+
+let cur=0,score=0,answered=false;
+const $=id=>document.getElementById(id);
+
+function startQuiz(){
+  cur=0;score=0;
+  $('startBox').style.display='none';
+  $('resultBox').style.display='none';
+  $('quizBox').style.display='block';
+  buildTrail();showQ();
+}
+function buildTrail(){
+  $('trail').innerHTML=QS.map((_,i)=>`<span class="dot" id="d${i}">${i+1}</span>`).join('');
+}
+function showQ(){
+  answered=false;
+  const q=QS[cur];
+  QS.forEach((_,i)=>{
+    const d=$('d'+i); d.classList.toggle('now',i===cur);
+    if(i===cur) d.textContent='🐰';
+    else if(!d.classList.contains('ok')&&!d.classList.contains('ng')) d.textContent=i+1;
+  });
+  $('qNo').textContent=`第 ${cur+1} / 10 題`;
+  $('qText').textContent=q.q;
+  $('fb').textContent='';$('fb').className='feedback';
+  $('nextBtn').style.display='none';
+  $('opts').innerHTML=q.o.map((t,i)=>
+    `<button class="opt" onclick="pick(${i},this)">${'🍓🍇🍊🍏'[ [0,2,4,6][i] ]||''} ${t}</button>`).join('');
+}
+function pick(i,btn){
+  if(answered)return;answered=true;
+  const q=QS[cur],ok=i===q.a;
+  document.querySelectorAll('.opt').forEach((b,j)=>{
+    b.disabled=true;
+    if(j===q.a)b.classList.add('ok');
+  });
+  const d=$('d'+cur);d.classList.remove('now');
+  if(ok){
+    score++;d.classList.add('ok');d.textContent='⭐';
+    $('fb').textContent='答對了！好棒！💖 '+q.e;$('fb').classList.add('good');
+  }else{
+    btn.classList.add('ng');d.classList.add('ng');d.textContent='💧';
+    $('fb').textContent='再想想～ '+q.e;$('fb').classList.add('bad');
+    saveWrong(q,i);
+  }
+  $('nextBtn').style.display='block';
+  $('nextBtn').textContent=cur===QS.length-1?'看成績 🎀':'下一題 →';
+}
+function nextQ(){cur++;cur<QS.length?showQ():finish();}
+
+function finish(){
+  $('quizBox').style.display='none';
+  const box=$('resultBox');box.style.display='block';
+  const face=score>=9?'🥳':score>=6?'😊':'💪';
+  const msg=score>=9?'太厲害了，數字女王就是妳！':score>=6?'很棒！錯的題目去錯題本再練一次吧！':'沒關係，看看重點整理和影片，再挑戰一次！';
+  box.innerHTML=`
+    <div class="face">${face}</div>
+    <div class="score num">${score} / 10</div>
+    <div class="stars-line">${'⭐'.repeat(score)||'🌱'}</div>
+    <div class="msg">${msg}</div>
+    <button class="big-btn" onclick="startQuiz()">再挑戰一次</button><br><br>
+    <a class="ghost-btn" href="index.html" style="text-decoration:none">回首頁</a>`;
+  saveProgress();
+}
+
+/* ── localStorage：進度＋星星＋錯題本 ── */
+function saveProgress(){
+  try{
+    const key='sm_u1_best',old=+(localStorage.getItem(key)||0);
+    if(score>old){
+      localStorage.setItem(key,score);
+      const stars=+(localStorage.getItem('sm_stars')||0)+(score-old);
+      localStorage.setItem('sm_stars',stars);
+    }
+    const prog=JSON.parse(localStorage.getItem('sm_progress')||'{}');
+    prog.u1={done:Math.max(score,(prog.u1&&prog.u1.done)||0),total:10,ts:Date.now()};
+    localStorage.setItem('sm_progress',JSON.stringify(prog));
+  }catch(e){}
+}
+function saveWrong(q,chosen){
+  try{
+    const wrong=JSON.parse(localStorage.getItem('sm_wrong')||'[]');
+    const found=wrong.find(w=>w.unit==='u1'&&w.q===q.q);
+    if(found){found.count++;found.chosen=q.o[chosen];}
+    else wrong.push({unit:'u1',unitName:'一億以內的數',q:q.q,options:q.o,answer:q.o[q.a],chosen:q.o[chosen],explain:q.e,count:1,ts:Date.now()});
+    localStorage.setItem('sm_wrong',JSON.stringify(wrong));
+  }catch(e){}
+}
+</script>
+</body>
+</html>
